@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package dao;
 
 import conn.ConnectionDB;
@@ -59,6 +53,7 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
          		session.close();
          }*/
          
+    	/*
         int result = 0;        
         //en bbdd debe estar todo a minúsculas
         String minEnglish = voc.getEnglish().toLowerCase();
@@ -82,6 +77,7 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
             // hay que enlazarla a este usuario en tbl_voc_user
             String sqlInsert = "insert into tbl_voc_user (tbl_Users_Id_usr, tbl_Vocabulary_id_Vocabulary)"+
                 " values (?,?)";
+            
             Vocabulario v = getVocabulary(minEnglish);                
             PreparedStatement ps = conex.prepareStatement(sqlInsert);
             ps.setInt(1,idUsr);
@@ -92,11 +88,14 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
                 return null;
             else
                 return null;            
-                  
+             
+            
         }catch (Exception e){
             System.out.println(e.getMessage());
             return null;
-        }   
+        }*/
+    	
+    	return null;
     }
 
     public boolean updateVocabulario(Vocabulario vocModified) {
@@ -232,7 +231,7 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
             Connection conex = cn.getConn();
             PreparedStatement ps = conex.prepareStatement(deleteVocUsr);
             ps.setInt(1, idVoc);
-            ps.setInt(2, idUser);
+           // ps.setInt(2, idUser);
             
             int result = ps.executeUpdate();
             ps.close();
@@ -255,5 +254,10 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
 		 	return true;
     	      
     }
+
+	public List<Vocabulario> findVocabulariesUser(int idUser) {
+		// TODO Auto-generated method stub
+		return null;
+	}
     
 }

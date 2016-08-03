@@ -224,7 +224,7 @@ public class TestDAOImpl implements ITestDAO{
             // relleno un list con los vocabularios pertenecientes al test en cuestion
             while(res.next()){
                                 
-            	aVoc.add(this.managerVoc.getVocabulary(res.getInt("tbl_Vocabulary_id_Vocabulary")));
+            	//aVoc.add(this.managerVoc.getVocabulary(res.getInt("tbl_Vocabulary_id_Vocabulary")));
                 /*t.setIdTest(res.getInt("Id_test"));
                 t.setIdUsr(res.getInt("tbl_Users_Id_usr"));
                 t.setFecha(res.getInt("fecha"));
