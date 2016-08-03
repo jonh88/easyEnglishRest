@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="domain.Vocabulario" table="tbl_vocabulary">
+		<id name="id" type="int">
+			<column name="id_Vocabulary"/>
+			<generator class="increment" />
+		</id>
+		<property name="english" type="java.lang.String">
+			<column name="english"/>
+		</property>
+		<property name="spanish" type="java.lang.String">
+			<column name="spanish"/>
+		</property>
+		
+		<many-to-one name="tipo" class="domain.Tipo" column="id_type" not-null="true"/>
+		
+	</class>
+</hibernate-mapping>

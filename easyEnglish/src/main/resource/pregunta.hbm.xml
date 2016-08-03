@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="domain.Pregunta" table="tbl_pregunta">
+		<id name="id" type="int">
+			<column name="id"/>
+			<generator class="increment" />
+		</id>
+		<property name="pregunta" type="java.lang.String">
+			<column name="pregunta"/>
+		</property>
+		<property name="respA" type="java.lang.String">
+			<column name="respA"/>
+		</property>
+		<property name="respB" type="java.lang.String">
+			<column name="respB"/>
+		</property>
+		<property name="respC" type="java.lang.String">
+			<column name="respC"/>
+		</property>
+		<property name="respD" type="java.lang.String">
+			<column name="respD"/>
+		</property>
+		<property name="respOK" type="java.lang.String">
+			<column name="respOK"/>
+		</property>		
+		
+	</class>
+</hibernate-mapping>

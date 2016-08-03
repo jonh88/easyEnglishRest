@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="domain.Usuario" table="tbl_users">
+		<id name="id" type="int">
+			<column name="Id_usr"/>
+			<generator class="increment" />
+		</id>
+		<property name="name" type="java.lang.String">
+			<column name="nombre"/>
+		</property>
+		<property name="apellidos" type="java.lang.String">
+			<column name="apellidos"/>
+		</property>
+		<property name="email" type="java.lang.String">
+			<column name="email"/>
+		</property>
+		<property name="pwd" type="java.lang.String">
+			<column name="pwd"/>
+		</property>
+	</class>
+</hibernate-mapping>
