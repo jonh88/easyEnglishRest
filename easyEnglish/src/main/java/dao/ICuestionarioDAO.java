@@ -7,9 +7,9 @@ import domain.Pregunta;
 
 public interface ICuestionarioDAO {
 
-	public int addCuestionario (int client, int numPreguntas);
+	public Cuestionario insertCuestionario (int client, int numPreguntas);
     
-    public int modify (Cuestionario c);
+    public boolean update (Cuestionario c);
     
     public Cuestionario getCuestionarioObject(Integer id);
     

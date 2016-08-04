@@ -30,25 +30,25 @@ public class testPregunta {
 	}
 	
 	@Test
-	public void insertTest(){
+	public void AinsertPregunta(){
 		q = preguntaManager.insertPregunta(q);
 		assertTrue(q.getId()>0);
 	}
 	
 	@Test
-	public void updateTest(){
+	public void BupdatePregunta(){
 		q.setRespOK("A");
 		assertTrue(preguntaManager.updatePregunta(q));
 	}
 
 	@Test
-	public void getTest(){
+	public void CgetPregunta(){
 		Pregunta res = preguntaManager.getPregunta(q.getId());
 		assertTrue(res.getId() == q.getId());
 	}
 	
 	@Test
-	public void deleteTest(){
+	public void DdeletePregunta(){
 		assertTrue(preguntaManager.delete(q.getId()));
 	}
 }

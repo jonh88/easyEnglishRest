@@ -4,29 +4,29 @@ import org.hibernate.Session;
 
 import conn.HibernateUtil;
 import dao.AuthenticationImpl;
+import dao.PreguntaDAOImpl;
 import dao.UsuarioDAOImpl;
 import daoTests.testUsuario;
-import domain.Usuario;
+import domain.*;
 
 public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		UsuarioDAOImpl userManager = new UsuarioDAOImpl();
+		Pregunta q = new Pregunta();
+		q.setPregunta("what is your name?");
+		q.setRespA("Mary");
+		q.setRespB("Jane");
+		q.setRespC("Jonh");
+		q.setRespD("Juan");
+		q.setRespOK("C");
 		
-		Usuario user = new Usuario();
-		user.setName("testName");
-		user.setApellidos("testApe");
-		user.setEmail("testEmail");
-		user.setPwd("12345");
+		PreguntaDAOImpl preguntaManager = new PreguntaDAOImpl();
 		
-		Usuario a = userManager.addUser(user);
-		
-		AuthenticationImpl au = new AuthenticationImpl();
-		
-		int valido = au.checkUser(a.getEmail(), "12345");
-		
-		System.out.println(valido);
+		//Pregunta a = preguntaManager.insertPregunta(q);
+		boolean f = preguntaManager.delete(1);
+		System.out.println(f);
+		//System.out.println(a.getId());
 					
 	}
 

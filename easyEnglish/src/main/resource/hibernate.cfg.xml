@@ -9,9 +9,9 @@
 
         <!-- Database connection settings -->
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/platformdb</property>
-        <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">Django2016</property>
+        <property name="hibernate.connection.url">jdbc:mysql://52.38.209.62:3306/platformdb</property>
+        <property name="hibernate.connection.username">admin</property>
+        <property name="hibernate.connection.password">P@ssw0rd</property>
 
         <!-- SQL dialect -->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
@@ -25,6 +25,7 @@
         <mapping resource="tipo.hbm.xml"/>
         <mapping resource="vocabulario.hbm.xml"/>
         <mapping resource="pregunta.hbm.xml"/>
+        <mapping resource="cuestionario.hbm.xml"/>
 
     </session-factory>
 

@@ -78,7 +78,7 @@ public class PreguntaDAOImpl implements IPreguntaDAO{
         }
 	}
 
-	public boolean delete(int id) {
+	public boolean delete(int idPreg) {
 
 		Session session = null;
         Transaction transaction = null;
@@ -86,7 +86,7 @@ public class PreguntaDAOImpl implements IPreguntaDAO{
         	session = HibernateUtil.getSessionFactory().getCurrentSession();
         	transaction = session.beginTransaction();
         	Query createQuery = session.createQuery("delete from Pregunta where id = :id");
-        	createQuery.setParameter("id", id);
+        	createQuery.setParameter("id", idPreg);
         	createQuery.executeUpdate();
         	transaction.commit();
         	return true;
@@ -94,7 +94,8 @@ public class PreguntaDAOImpl implements IPreguntaDAO{
         	e.printStackTrace();
             return false;
         }finally{
-        	session.close();
+        	if (session.isOpen())
+        		session.close();
         }
 	}
 

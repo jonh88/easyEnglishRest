@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="domain.Cuestionario" table="tbl_cuestionario">
+		<id name="id" type="int">
+			<column name="id"/>
+			<generator class="increment" />
+		</id>
+		
+		<many-to-one name="id_user" class="domain.Usuario" column="Id_usr" not-null="true"/>
+		
+		<property name="fecha" type="java.lang.Integer">
+			<column name="fecha"/>
+		</property>		
+		<property name="num_preguntas" type="java.lang.Integer">
+			<column name="num_preguntas"/>
+		</property>
+		<property name="num_fallos" type="java.lang.Integer">
+			<column name="num_fallos"/>
+		</property>
+		
+		
+	</class>
+</hibernate-mapping>
