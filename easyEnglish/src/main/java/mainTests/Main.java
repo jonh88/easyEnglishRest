@@ -23,10 +23,10 @@ public class Main {
 		
 		PreguntaDAOImpl preguntaManager = new PreguntaDAOImpl();
 		
-		//Pregunta a = preguntaManager.insertPregunta(q);
-		boolean f = preguntaManager.delete(1);
-		System.out.println(f);
-		//System.out.println(a.getId());
+		Pregunta a = preguntaManager.insertPregunta(q);
+		//boolean f = preguntaManager.delete(1);
+		//System.out.println(f);
+		System.out.println(a.getId());
 					
 	}
 

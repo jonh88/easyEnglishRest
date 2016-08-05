@@ -26,6 +26,7 @@ public class PreguntaDAOImpl implements IPreguntaDAO{
 	        return q;
         	            
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
@@ -99,4 +100,22 @@ public class PreguntaDAOImpl implements IPreguntaDAO{
         }
 	}
 
+	public Long getCount(){
+		Session session = null;
+        Transaction transaction = null;
+        try{
+        	session = HibernateUtil.getSessionFactory().getCurrentSession();
+        	transaction = session.beginTransaction();
+        	Query createQuery = session.createQuery("select count(*) from Pregunta");        	
+        	long n = (Long)createQuery.uniqueResult();
+        	transaction.commit();
+        	return n;
+        }catch (Exception e){
+        	e.printStackTrace();
+            return -1L;
+        }finally{
+        	if (session.isOpen())
+        		session.close();
+        }
+	}
 }

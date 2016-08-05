@@ -20,6 +20,7 @@ public class CuestionarioDAOImpl implements ICuestionarioDAO{
 		 * 3. Extraer una lista de preguntas al azar de tbl_Preguntas igual a numPreguntas 
 		 * 	  e insertarlas en tbl_cuestionario_pregunta	 
 		 */
+		
 		int fecha = 20160101;
 		Cuestionario q = new Cuestionario(client,fecha,numPreguntas,0);
 		return q;

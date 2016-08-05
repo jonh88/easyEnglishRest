@@ -25,6 +25,14 @@
 		<property name="respOK" type="java.lang.String">
 			<column name="respOK"/>
 		</property>		
+		<!-- 
+		<set name="cuestionarios" table="tbl_cuestionario_pregunta" cascade="all" inverse="false">
+			<key>
+				<column name="tbl_pregunta_id"/>
+			</key>
+			<many-to-many column="tbl_cuestionario_id" class="domain.Cuestionario" />
+		</set>
+		 -->
 		
 	</class>
 </hibernate-mapping>

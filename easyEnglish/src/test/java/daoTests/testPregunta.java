@@ -36,19 +36,25 @@ public class testPregunta {
 	}
 	
 	@Test
-	public void BupdatePregunta(){
+	public void BgetCount(){
+		long n = preguntaManager.getCount();
+		assertTrue(n == 1L);
+	}
+	
+	@Test
+	public void CupdatePregunta(){
 		q.setRespOK("A");
 		assertTrue(preguntaManager.updatePregunta(q));
 	}
 
 	@Test
-	public void CgetPregunta(){
+	public void DgetPregunta(){
 		Pregunta res = preguntaManager.getPregunta(q.getId());
 		assertTrue(res.getId() == q.getId());
 	}
 	
 	@Test
-	public void DdeletePregunta(){
+	public void EdeletePregunta(){
 		assertTrue(preguntaManager.delete(q.getId()));
 	}
 }

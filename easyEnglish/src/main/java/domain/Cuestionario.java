@@ -1,5 +1,7 @@
 package domain;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -10,38 +12,45 @@ import java.io.Serializable;
 public class Cuestionario implements Serializable {
   
     private int id;    
-    private int id_user;
+    private int user;
     private int fecha;    
-    private int num_preguntas;    
-    private int num_fallos;
+    private int preguntas;    
+    private int fallos;
+   // private Set<Pregunta> preguntas = new HashSet<Pregunta>();
     
-    public Cuestionario(){}
+    public Cuestionario (){}
     
     public Cuestionario (int usr, int date, int preguntas, int fallos){
-        this.id_user = usr;
+        this.user = usr;
         this.fecha = date;
-        this.num_preguntas = preguntas;
-        this.num_fallos = fallos;
+        this.preguntas = preguntas;
+        this.fallos = fallos;
     }
 
-    public int getIdCuestionario() { return this.id; }
+    public int getId() { return this.id; }
 
-    public void setIdCuestionario(int idCuestionario) { this.id = idCuestionario; }
+    public void setId(int idCuestionario) { this.id = idCuestionario; }
 
-    public int getIdUser() { return id_user; }
+    public int getUser() { return user; }
 
-    public void setIdUser(int idUser) { this.id_user = idUser; }
+    public void setUser(int idUser) { this.user = idUser; }
 
     public int getFecha() { return fecha; }
 
     public void setFecha(int fecha) { this.fecha = fecha; }
 
-    public int getNumPreguntas() { return this.num_preguntas; }
+    public int getPreguntas() { return this.preguntas; }
 
-    public void setNumPreguntas(int numPreguntas) { this.num_preguntas = numPreguntas; }
+    public void setPreguntas(int numPreguntas) { this.preguntas = numPreguntas; }
 
-    public int getNumFallos() { return this.num_fallos; }
+    public int getFallos() { return this.fallos; }
 
-    public void setNumFallos(int numFallos) { this.num_fallos = numFallos; }
+    public void setFallos(int numFallos) { this.fallos = numFallos; }
+    
+   // public Set<Pregunta> getPreguntas(){ return this.preguntas; }
+    
+   // public void setPreguntas(Set<Pregunta> preguntas){ this.preguntas = preguntas;}
+    
+    
     
 }

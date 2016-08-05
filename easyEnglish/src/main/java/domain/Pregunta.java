@@ -1,6 +1,8 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  *
@@ -16,6 +18,7 @@ public class Pregunta implements Serializable {
     private String respC;
     private String respD;
     private String respOK;
+    //private Set<Cuestionario> cuestionarios = new HashSet();
     
     
     public Pregunta (){}
@@ -47,5 +50,10 @@ public class Pregunta implements Serializable {
     public String getRespOK() { return this.respOK; }
 
     public void setRespOK(String res) { this.respOK = res; }
+    /*
+    public Set<Cuestionario> getCuestionarios(){ return this.cuestionarios; }
+    
+    public void setCuestionarios (Set<Cuestionario> cuestionarios) {this.cuestionarios= cuestionarios;}
+    */
     
 }

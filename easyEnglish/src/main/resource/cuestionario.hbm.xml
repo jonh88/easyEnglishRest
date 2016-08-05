@@ -6,20 +6,28 @@
 		<id name="id" type="int">
 			<column name="id"/>
 			<generator class="increment" />
-		</id>
+		</id>			
 		
-		<many-to-one name="id_user" class="domain.Usuario" column="Id_usr" not-null="true"/>
-		
-		<property name="fecha" type="java.lang.Integer">
+		<property name="fecha" type="int">
 			<column name="fecha"/>
 		</property>		
-		<property name="num_preguntas" type="java.lang.Integer">
+		<property name="preguntas" type="int">
 			<column name="num_preguntas"/>
 		</property>
-		<property name="num_fallos" type="java.lang.Integer">
+		<property name="fallos" type="int">
 			<column name="num_fallos"/>
 		</property>
 		
+		<many-to-one name="user" class="domain.Usuario" column="Id_usr" not-null="true"/>
+		
+		 <!--
+		<set name="preguntas" table="tbl_cuestionario_pregunta" cascade="all" inverse="true">
+			<key>
+				<column name="tbl_cuestionario_id"/>
+			</key>
+			<many-to-many column="tbl_pregunta_id" class="domain.Pregunta"/>
+		</set>
+		 -->
 		
 	</class>
 </hibernate-mapping>
