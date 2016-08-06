@@ -118,4 +118,30 @@ public class PreguntaDAOImpl implements IPreguntaDAO{
         		session.close();
         }
 	}
+
+	public List<Pregunta> getAll(){
+		
+		Session session = null;        
+        try{
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            Query query = session.createQuery("from Pregunta");            
+            
+            List q = query.list();
+            session.getTransaction().commit();
+            
+            if ((q != null)&&(q.isEmpty())){
+            	return null;
+            }else if ((q != null)&&(!q.isEmpty())){
+            	return (List<Pregunta>)q;
+            }
+            
+            return null;            
+        }catch (Exception e){
+            return null;
+        }finally{
+        	if (session.isOpen())
+        		session.close();
+        }
+	}
 }

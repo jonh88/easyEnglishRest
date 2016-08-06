@@ -204,9 +204,9 @@ public class UsersResource {
 					Gson gson = new Gson();
 			        Vocabulario voc = gson.fromJson(result,Vocabulario.class);
 			        
-			    	int res = vocabularioManager.addVocabulary(voc, idUser);
+			    	Vocabulario res = vocabularioManager.addVocabulary(voc, idUser);
 			    	
-			        if (res > 0){
+			        if (res != null){
 			            return Response.ok().build();
 			        }else{
 			            return Response.serverError().build();
@@ -241,8 +241,9 @@ public class UsersResource {
 			 int validado = this.authz.validaToken(token, id);
 			  
 			  switch (validado){
-			  	case 1:			  		
-			  		 if (vocabularioManager.delete(idVoc,idUser))
+			  	case 1:			
+			  		//TO-CHECK
+			  		 if (vocabularioManager.delete(idVoc))
 			             return Response.ok().build();
 			         else          
 			             return Response.notModified().build();

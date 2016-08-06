@@ -1,37 +1,32 @@
-package mainTests;
+package daoTests;
 
-import java.util.Random;
+import static org.junit.Assert.*;
+import java.util.Set;
 
-import org.hibernate.Session;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-import conn.HibernateUtil;
-import dao.AuthenticationImpl;
 import dao.CuestionarioDAOImpl;
 import dao.PreguntaDAOImpl;
 import dao.UsuarioDAOImpl;
-import daoTests.testUsuario;
-import domain.*;
+import domain.Cuestionario;
+import domain.Pregunta;
+import domain.Usuario;
 
-public class Main {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class testCuestionario {
 	private static Pregunta q1,q2,q3,q4,q5; 	
 	private static CuestionarioDAOImpl cuestionarioManager;
 	private static Cuestionario cuestionario;
 	private static UsuarioDAOImpl userManager; 
 	private static final int NUMPREGUNTAS = 3;
-
-	public static void main(String[] args) {
-				
-		init();
-		
-		//Usuario testUser = userManager.findUserByEmail("prueba2@gmail.com");
-		cuestionario = cuestionarioManager.insertCuestionario(5, NUMPREGUNTAS);		
-		
-		finish();
-		
-					
-	}
 	
-	public static void init(){
+	
+	@BeforeClass
+	public static void setUp(){
 		q1 = new Pregunta();
 		q1.setPregunta("question 1");
 		q1.setRespA("a");
@@ -82,8 +77,43 @@ public class Main {
 		
 		cuestionarioManager = new CuestionarioDAOImpl();
 	}
+	
+	@Test
+	public void AinsertCuestionario(){
+		Usuario testUser = userManager.findUserByEmail("prueba2@gmail.com");
+		cuestionario = cuestionarioManager.insertCuestionario(testUser.getId(), NUMPREGUNTAS);
+		
+		assertTrue(cuestionario != null);				
+	}
+	
+	@Test
+	public void Bupdate(){
+		cuestionario.setNumFallos(2);
+		assertTrue(cuestionarioManager.update(cuestionario));
+	}
+	
+	@Test
+	public void CgetCuestionarioObject(){
+		Cuestionario c = cuestionarioManager.getCuestionarioObject(cuestionario.getId());
+		
+		assertTrue(c.getId() == cuestionario.getId());
+		
+	}
 
-	public static void finish(){
+	@Test
+	public void DgetPreguntasCuestionario(){
+		Set<Pregunta> preguntas = cuestionarioManager.getPreguntasCuestionario(cuestionario.getId());
+		
+		assertTrue(preguntas.size() == NUMPREGUNTAS);
+	}
+	
+	@Test
+	public void Edelete(){
+		assertTrue(cuestionarioManager.delete(cuestionario.getId()));
+	}	
+	
+	@AfterClass
+	public static void tearDown(){
 		PreguntaDAOImpl preguntaManager = new PreguntaDAOImpl();
 		preguntaManager.delete(q1.getId());
 		preguntaManager.delete(q2.getId());

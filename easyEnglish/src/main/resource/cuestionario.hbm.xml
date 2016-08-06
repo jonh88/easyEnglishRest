@@ -11,23 +11,23 @@
 		<property name="fecha" type="int">
 			<column name="fecha"/>
 		</property>		
-		<property name="preguntas" type="int">
+		<property name="numPreguntas" type="int">
 			<column name="num_preguntas"/>
 		</property>
-		<property name="fallos" type="int">
+		<property name="numFallos" type="int">
 			<column name="num_fallos"/>
 		</property>
 		
 		<many-to-one name="user" class="domain.Usuario" column="Id_usr" not-null="true"/>
 		
-		 <!--
+		 
 		<set name="preguntas" table="tbl_cuestionario_pregunta" cascade="all" inverse="true">
 			<key>
 				<column name="tbl_cuestionario_id"/>
 			</key>
 			<many-to-many column="tbl_pregunta_id" class="domain.Pregunta"/>
 		</set>
-		 -->
+		 
 		
 	</class>
 </hibernate-mapping>

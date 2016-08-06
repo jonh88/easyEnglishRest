@@ -14,17 +14,17 @@ public class Cuestionario implements Serializable {
     private int id;    
     private int user;
     private int fecha;    
-    private int preguntas;    
-    private int fallos;
-   // private Set<Pregunta> preguntas = new HashSet<Pregunta>();
+    private int numPreguntas;    
+    private int numFallos;
+    private Set<Pregunta> preguntas = new HashSet<Pregunta>();
     
     public Cuestionario (){}
     
     public Cuestionario (int usr, int date, int preguntas, int fallos){
         this.user = usr;
         this.fecha = date;
-        this.preguntas = preguntas;
-        this.fallos = fallos;
+        this.numPreguntas = preguntas;
+        this.numFallos = fallos;
     }
 
     public int getId() { return this.id; }
@@ -39,17 +39,17 @@ public class Cuestionario implements Serializable {
 
     public void setFecha(int fecha) { this.fecha = fecha; }
 
-    public int getPreguntas() { return this.preguntas; }
+    public int getNumPreguntas() { return this.numPreguntas; }
 
-    public void setPreguntas(int numPreguntas) { this.preguntas = numPreguntas; }
+    public void setNumPreguntas(int numPreguntas) { this.numPreguntas = numPreguntas; }
 
-    public int getFallos() { return this.fallos; }
+    public int getNumFallos() { return this.numFallos; }
 
-    public void setFallos(int numFallos) { this.fallos = numFallos; }
+    public void setNumFallos(int numFallos) { this.numFallos = numFallos; }
     
-   // public Set<Pregunta> getPreguntas(){ return this.preguntas; }
+    public Set<Pregunta> getPreguntas(){ return this.preguntas; }
     
-   // public void setPreguntas(Set<Pregunta> preguntas){ this.preguntas = preguntas;}
+    public void setPreguntas(Set<Pregunta> preguntas){ this.preguntas = preguntas;}
     
     
     

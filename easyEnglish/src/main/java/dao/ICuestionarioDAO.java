@@ -1,6 +1,6 @@
 package dao;
 
-import java.util.List;
+import java.util.Set;
 
 import domain.Cuestionario;
 import domain.Pregunta;
@@ -13,7 +13,7 @@ public interface ICuestionarioDAO {
     
     public Cuestionario getCuestionarioObject(Integer id);
     
-    public List<Pregunta> listCuestionario (int idUser);
+    public Set<Pregunta> getPreguntasCuestionario (int idCuestionario);
     
     public boolean delete (int id);
 }

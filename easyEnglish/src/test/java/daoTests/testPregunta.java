@@ -2,6 +2,7 @@ package daoTests;
 
 import static org.junit.Assert.*;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -56,5 +57,25 @@ public class testPregunta {
 	@Test
 	public void EdeletePregunta(){
 		assertTrue(preguntaManager.delete(q.getId()));
+	}
+	@Test
+	public void FgetAll(){		
+		Pregunta p = new Pregunta();
+		p.setPregunta("what is your name?");
+		p.setRespA("Mary");
+		p.setRespB("Jane");
+		p.setRespC("Jonh");
+		p.setRespD("Juan");
+		p.setRespOK("C");
+		int a = preguntaManager.insertPregunta(p).getId();
+		int b = preguntaManager.insertPregunta(p).getId();
+		
+		List<Pregunta> preguntas = preguntaManager.getAll();
+		
+		preguntaManager.delete(a);
+		preguntaManager.delete(b);
+		
+		assertTrue(preguntas.size() == 2);
+				
 	}
 }

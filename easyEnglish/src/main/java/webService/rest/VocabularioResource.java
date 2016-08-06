@@ -72,7 +72,7 @@ public class VocabularioResource {
 			  switch (validado){
 			  	case 1:			  		
 			  	//buscamos el vocabulario en la BD, lo instanciamos y devolvemos
-			        Vocabulario vocab = vocabularioManager.getVocabulary(idVoc);
+			        Vocabulario vocab = vocabularioManager.findVocabularyById(idVoc);
 			        
 			        if (vocab == null){
 			            return Response.status(Status.NOT_FOUND).entity("Vocabulary not found.").build();
@@ -104,14 +104,14 @@ public class VocabularioResource {
     @PUT
     @Path("{idVoc}")
     @Consumes(MediaType.APPLICATION_JSON)    
-    public Response modifyVocabulary(@PathParam("idVoc") int idVoc, @QueryParam("id")int id, Vocabulario updatedVocab, @HeaderParam("token")String token) {
+    public Response updateVocabulary(@PathParam("idVoc") int idVoc, @QueryParam("id")int id, Vocabulario updatedVocab, @HeaderParam("token")String token) {
     	try{
 			 this.authz = new AuthenticationImpl();			  
 			 int validado = this.authz.validaToken(token, id);
 			  
 			  switch (validado){
 			  	case 1:			  		
-			  		if (vocabularioManager.addVocabulary(updatedVocab, idVoc) > 0){
+			  		if (vocabularioManager.updateVocabulario(updatedVocab)== true){
 			            return Response.status(Status.OK).build();
 			        }else{
 			        	return Response.notModified().build();
