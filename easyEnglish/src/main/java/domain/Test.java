@@ -6,6 +6,9 @@
 
 package domain;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.xml.bind.annotation.*;
 
 /**
@@ -16,32 +19,33 @@ import javax.xml.bind.annotation.*;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Test implements Serializable {
     @XmlAttribute
-    private int idTest;
+    private int id;
     @XmlElement
-    private int idUsr;
+    private Usuario user;
     @XmlElement
     private int fecha;
     @XmlElement
     private int numPreguntas;
     @XmlElement
     private int numFallos;
+    Set<Vocabulario> vocabularios = new HashSet<Vocabulario>();
     
     public Test(){}
     
-    public Test (int usr, int date, int preguntas, int fallos){
-        this.idUsr = usr;
+    public Test (Usuario user, int date, int preguntas, int fallos){
+        this.user = user;
         this.fecha = date;
         this.numPreguntas = preguntas;
         this.numFallos = fallos;
     }
 
-    public int getIdTest() { return idTest; }
+    public int getId() { return this.id; }
 
-    public void setIdTest(int idTest) { this.idTest = idTest; }
+    public void setId(int idTest) { this.id = idTest; }
 
-    public int getIdUsr() { return idUsr; }
+    public Usuario getUser() { return this.user; }
 
-    public void setIdUsr(int idUsr) { this.idUsr = idUsr; }
+    public void setUser(Usuario user) { this.user = user; }
 
     public int getFecha() { return fecha; }
 
@@ -54,5 +58,9 @@ public class Test implements Serializable {
     public int getNumFallos() { return numFallos; }
 
     public void setNumFallos(int numFallos) { this.numFallos = numFallos; }
+    
+    public Set<Vocabulario> getVocabularios() {return this.vocabularios; }
+    
+    public void setVocabularios(Set<Vocabulario> vocs) {this.vocabularios = vocs;}
     
 }

@@ -17,7 +17,7 @@ public interface ITipoDAO {
     
     public Tipo addTipo (Tipo t);
     
-    public Tipo modify (Tipo tipoModified);
+    public boolean modify (Tipo tipoModified);
     
     public Tipo getTipo(Integer id);
     

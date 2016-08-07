@@ -8,10 +8,15 @@ package dao;
 
 import conn.HibernateUtil;
 import dao.IUsuarioDAO;
+import domain.Cuestionario;
 import domain.Test;
 import domain.Usuario;
+import domain.Vocabulario;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -185,24 +190,90 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
         	return true;
     }
 
-    public List<Test> getTestUser (int idUser){
-    	String select = "select * from tbl_test where tbl_Users_Id_usr = ?";
-        List<Test> aTest = new ArrayList<Test>();
-        
+    public Set<Test> getTestUser (int idUser){
+    	Session session = null;        
         try{
-            Connection conex = this.cn.getConn();            
-            PreparedStatement ps = conex.prepareStatement(select);
-            ps.setInt(1, idUser);
-            ResultSet res = ps.executeQuery();
-            // relleno un list con los vocabularios pertenecientes al test en cuestion
-            while(res.next()){                                
-            	aTest.add(this.managerTest.getTestObject(res.getInt("Id_test")));                
-            }                    
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            Query query = session.createQuery("from Usuario where id = :id");
+            query.setParameter("id", idUser);
             
-            return aTest;
+            List q = query.list();
+            Usuario c = (Usuario)q.get(0);
+            //al utilizar un metodo del set, hibernate va  a la bd a por los datos,
+            //debe hacerse en dentro de la misma session que cuando vas a por la entidad ppal.
+            if (c.getTests().isEmpty()){
+            	return null;
+            }
+                        
+            session.getTransaction().commit();
             
+            return c.getTests();
+                     
         }catch (Exception e){
             return null;
+        }finally{
+        	if (session.isOpen())
+        		session.close();
         }
+    	
     }
+
+	public Set<Vocabulario> getVocabularios(int idUser) {
+		Session session = null;        
+        try{
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            Query query = session.createQuery("from Usuario where id = :id");
+            query.setParameter("id", idUser);
+            
+            List q = query.list();
+            Usuario c = (Usuario)q.get(0);
+            //al utilizar un metodo del set, hibernate va  a la bd a por los datos,
+            //debe hacerse en dentro de la misma session que cuando vas a por la entidad ppal.
+            if (c.getVocabularios().isEmpty()){
+            	return null;
+            }
+                        
+            session.getTransaction().commit();
+            
+            return c.getVocabularios();
+                     
+        }catch (Exception e){
+            return null;
+        }finally{
+        	if (session.isOpen())
+        		session.close();
+        }
+		
+	}
+
+	public Set<Cuestionario> getCuestionarios(int idUser) {
+		Session session = null;        
+        try{
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            Query query = session.createQuery("from Usuario where id = :id");
+            query.setParameter("id", idUser);
+            
+            List q = query.list();
+            Usuario c = (Usuario)q.get(0);
+            //al utilizar un metodo del set, hibernate va  a la bd a por los datos,
+            //debe hacerse en dentro de la misma session que cuando vas a por la entidad ppal.
+            if (c.getCuestionarios().isEmpty()){
+            	return null;
+            }
+                        
+            session.getTransaction().commit();
+            
+            return c.getCuestionarios();
+                     
+        }catch (Exception e){
+            return null;
+        }finally{
+        	if (session.isOpen())
+        		session.close();
+        }
+		
+	}
 }

@@ -1,9 +1,20 @@
 package mainTests;
 
+import static org.junit.Assert.assertTrue;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import org.hibernate.Session;
+import org.junit.Test;
 
+import conn.ConnectionDB;
 import conn.HibernateUtil;
 import dao.AuthenticationImpl;
 import dao.CuestionarioDAOImpl;
@@ -13,21 +24,46 @@ import daoTests.testUsuario;
 import domain.*;
 
 public class Main {
-	private static Pregunta q1,q2,q3,q4,q5; 	
-	private static CuestionarioDAOImpl cuestionarioManager;
+	private static Pregunta q1,q2,q3,q4,q5; 		
 	private static Cuestionario cuestionario;
-	private static UsuarioDAOImpl userManager; 
-	private static final int NUMPREGUNTAS = 3;
+	private static UsuarioDAOImpl userManager = new UsuarioDAOImpl(); 
+	private static final int NUMPREGUNTAS = 5;
 
 	public static void main(String[] args) {
 				
-		init();
+		/*init();
 		
-		//Usuario testUser = userManager.findUserByEmail("prueba2@gmail.com");
-		cuestionario = cuestionarioManager.insertCuestionario(5, NUMPREGUNTAS);		
+		Usuario testUser = userManager.findUserByEmail("prueba@gmail.com");
+		Session session = HibernateUtil.getSessionFactory().openSession();		
+		session.beginTransaction();
 		
-		finish();
+		cuestionario = new Cuestionario(testUser,20160101,NUMPREGUNTAS,-1);
+		Set<Pregunta> preguntas = new HashSet<Pregunta>();
+		preguntas.add(q1);
+		preguntas.add(q2);
+		preguntas.add(q3);
+		preguntas.add(q4);
+		preguntas.add(q5);
+		cuestionario.setPreguntas(preguntas);
 		
+		session.save(cuestionario);		
+		session.getTransaction().commit();
+			*/	
+		
+		
+		UsuarioDAOImpl userManager = new UsuarioDAOImpl();
+    	Usuario user = userManager.findUserById(4);
+    	
+    	System.out.println(user.getPwd());
+    	
+    	AuthenticationImpl auth = new AuthenticationImpl();
+    	user.setPwd(auth.encrypt(user.getPwd()));
+    	
+    	boolean success = userManager.updateUser(user);
+    	
+    	System.out.println(success);
+    	
+    	
 					
 	}
 	
@@ -79,8 +115,7 @@ public class Main {
 		preguntaManager.insertPregunta(q3);
 		preguntaManager.insertPregunta(q4);
 		preguntaManager.insertPregunta(q5);
-		
-		cuestionarioManager = new CuestionarioDAOImpl();
+				
 	}
 
 	public static void finish(){

@@ -19,5 +19,27 @@
 		<property name="pwd" type="java.lang.String">
 			<column name="pwd"/>
 		</property>
+		
+		<set name="cuestionarios" cascade="all" inverse="true">
+			<key>
+				<column name="id_user" />
+			</key>
+			<one-to-many class="domain.Cuestionario" />
+		</set>
+		
+		<set name="vocabularios" table="tbl_voc_user" cascade="all" inverse="false">
+			<key>
+				<column name="tbl_Users_Id_usr"/>
+			</key>
+			<many-to-many column="tbl_Vocabulary_id_Vocabulary" class="domain.Vocabulario" />
+		</set>
+		
+		<set name="tests" cascade="all" inverse="true">
+			<key>
+				<column name="tbl_Users_Id_usr" />
+			</key>
+			<one-to-many class="domain.Test" />
+		</set>
+		
 	</class>
 </hibernate-mapping>

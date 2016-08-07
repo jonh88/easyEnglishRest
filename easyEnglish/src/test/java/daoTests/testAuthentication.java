@@ -2,59 +2,40 @@ package daoTests;
 
 import static org.junit.Assert.*;
 
+import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import dao.AuthenticationImpl;
+import dao.UsuarioDAOImpl;
 import domain.Token;
+import domain.Usuario;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class testAuthentication {
-
-	@Test
-	public void AtestCheckUser() {
-		AuthenticationImpl authz = new AuthenticationImpl();
-	//	int idUser = authz.checkUser("jonhy_mrtlz@hotmail.com", "atras");
-		
-		//assertTrue(idUser == 4);
+	private static Usuario user;
+	private static final int USERID = 4;
+	private static final String PASS = "P@ssw0rd";
+	private static String token;
+	private static AuthenticationImpl authz;
+	
+	@BeforeClass
+	public static void init(){
+		authz = new AuthenticationImpl();
+		UsuarioDAOImpl userManager = new UsuarioDAOImpl();
+		user = userManager.findUserById(USERID);
 	}
 
 	@Test
-	public void DtestCheckToken() {
-		AuthenticationImpl authz = new AuthenticationImpl();
-		//comprueba tb el update del token
-		Token t = new Token(4);
-		/*if (authz.setToken(t.getToken(), "jonhy_mrtlz@hotmail.com")){
-			//ha echo bien el update
-			boolean result = authz.checkToken(t.getToken(), 4);
-			assertTrue(result);
-		}else{
-			assertTrue(false);
-		}*/
-					
+	public void AtestGetToken() {		
+		token = authz.getToken(user.getEmail(), PASS);
+		assertTrue(token != null);				
 	}
 
 	@Test
-	public void BtestSetTokenFirstTime() {
-		Token t = new Token(4);
-		AuthenticationImpl authz = new AuthenticationImpl();		
-		//boolean result = authz.setToken(t.getToken(), "jonhy_mrtlz@hotmail.com");
-		//assertTrue (result);
+	public void BvalidaToken() {
+		assertTrue(authz.validaToken(token, USERID) == 1);					
 	}
 	
-	@Test
-	public void CtestSetTokenUpdate() {
-		Token t = new Token(4);
-		AuthenticationImpl authz = new AuthenticationImpl();
-		//boolean result = authz.setToken(t.getToken(), "jonhy_mrtlz@hotmail.com");
-		//assertTrue (result);
-	}
-
-	@Test
-	public void AAtestTokenExist() {
-		AuthenticationImpl authz = new AuthenticationImpl();
-		//boolean result = authz.tokenExist(4);
-		//assertTrue (result == false);
-	}
 }

@@ -18,14 +18,14 @@
 			<column name="num_fallos"/>
 		</property>
 		
-		<many-to-one name="user" class="domain.Usuario" column="Id_usr" not-null="true"/>
+		<many-to-one name="user" class="domain.Usuario" column="id_user" not-null="true"/>
 		
 		 
-		<set name="preguntas" table="tbl_cuestionario_pregunta" cascade="all" inverse="true">
+		<set name="preguntas" table="tbl_cuestionario_pregunta" cascade="all" inverse="false">
 			<key>
 				<column name="tbl_cuestionario_id"/>
 			</key>
-			<many-to-many column="tbl_pregunta_id" class="domain.Pregunta"/>
+			<many-to-many column="tbl_pregunta_id" class="domain.Pregunta" />
 		</set>
 		 
 		

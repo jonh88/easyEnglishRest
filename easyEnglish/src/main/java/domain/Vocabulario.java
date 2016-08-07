@@ -7,6 +7,8 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.Set;
+
 import javax.xml.bind.annotation.*;
 
 /**
@@ -24,7 +26,9 @@ public class Vocabulario implements Serializable {
     @XmlElement
     private String spanish;
     @XmlElement
-    private int tipo;
+    private Tipo tipo;
+    private Set<Usuario> usuarios;
+    private Set<Test> tests;
     
     public Vocabulario (){}
     
@@ -40,8 +44,15 @@ public class Vocabulario implements Serializable {
 
     public void setSpanish(String spanish) { this.spanish = spanish; }
 
-    public int getTipo() { return tipo; }
+    public Tipo getTipo() { return tipo; }
 
-    public void setTipo(int tipo) { this.tipo = tipo; }
+    public void setTipo(Tipo tipo) { this.tipo = tipo; }
     
+    public Set<Usuario> getUsuarios(){ return this.usuarios; }
+    
+    public void setUsuarios (Set<Usuario> users) {this.usuarios = users;}
+    
+    public Set<Test> getTests(){ return this.tests; }
+    
+    public void setTests (Set<Test> tests) {this.tests = tests;}
 }

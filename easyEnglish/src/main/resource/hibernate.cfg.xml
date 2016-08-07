@@ -25,7 +25,8 @@
         <mapping resource="tipo.hbm.xml"/>
         <mapping resource="vocabulario.hbm.xml"/>
         <mapping resource="pregunta.hbm.xml"/>
-		<mapping resource="cuestionario.hbm.xml"/>  
+		<mapping resource="cuestionario.hbm.xml"/>
+		<mapping resource="test.hbm.xml"/>  
 
     </session-factory>
 

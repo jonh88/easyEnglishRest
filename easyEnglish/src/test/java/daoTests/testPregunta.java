@@ -39,7 +39,7 @@ public class testPregunta {
 	@Test
 	public void BgetCount(){
 		long n = preguntaManager.getCount();
-		assertTrue(n == 1L);
+		assertTrue(n == 6L);
 	}
 	
 	@Test
@@ -75,7 +75,7 @@ public class testPregunta {
 		preguntaManager.delete(a);
 		preguntaManager.delete(b);
 		
-		assertTrue(preguntas.size() == 2);
+		assertTrue(preguntas.size() == 7);
 				
 	}
 }

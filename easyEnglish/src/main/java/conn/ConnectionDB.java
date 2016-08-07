@@ -16,10 +16,10 @@ import java.sql.DriverManager;
  * @author Jonh
  */
 public class ConnectionDB {
-    private String host = "localhost:3306";
+    private String host = "52.38.209.62:3306";
     private String bd = "platformdb";
-    private String userDB = "root";
-    private String pwdDB = "Django2016";
+    private String userDB = "admin";
+    private String pwdDB = "P@ssw0rd";
     private Connection conex;
     
     public ConnectionDB(){

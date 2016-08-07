@@ -10,81 +10,65 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import dao.TipoDAOImpl;
 import dao.UsuarioDAOImpl;
 import dao.VocabularioDAOImpl;
+import domain.Tipo;
 import domain.Usuario;
 import domain.Vocabulario;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class testVocabulario {
 
-	private static int idUser;
-	private static int idVoc;
+	private static VocabularioDAOImpl vocManager;
+	private static Vocabulario voc;
+	private static final int IDTIPO = 4;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		UsuarioDAOImpl userImpl = new UsuarioDAOImpl();
-		Usuario user = new Usuario("testName","testApe","testEmail", "testPass");
-		testVocabulario.idUser = userImpl.addUser(user).getId();
-		assertTrue(testVocabulario.idUser > 0);
+		vocManager = new VocabularioDAOImpl();
+		voc = new Vocabulario();
+		voc.setEnglish("test");
+		voc.setSpanish("prueba");
+		
+		TipoDAOImpl tipoManager = new TipoDAOImpl();
+		Tipo t = tipoManager.getTipo(IDTIPO);
+		
+		voc.setTipo(t);
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
-		UsuarioDAOImpl userImpl = new UsuarioDAOImpl();
-		boolean result = userImpl.delete(testVocabulario.idUser);
-		assertTrue(result);
-	}
-
-	@Test
-	public void AtestAddVocabulary() {
-		Vocabulario voc = new Vocabulario();
-		voc.setEnglish("english");
-		voc.setSpanish("spanish");
-		voc.setTipo(1);
-		
-		VocabularioDAOImpl vocImpl = new VocabularioDAOImpl();
-		//testVocabulario.idVoc = vocImpl.addVocabulary(voc, testVocabulario.idUser);
-		assertTrue(testVocabulario.idVoc > 0);
 		
 	}
 
 	@Test
-	public void BtestModify() {
-		Vocabulario voc = new Vocabulario();
-		voc.setEnglish("house");
-		voc.setSpanish("casa");
-		voc.setTipo(1);
-		
-		VocabularioDAOImpl vocImpl = new VocabularioDAOImpl();
-		//boolean result = vocImpl.modify(voc, testVocabulario.idVoc);
-		
-		//assertTrue(result);
+	public void AinsertVocabulary() {
+		vocManager.insertVocabulary(voc);
+		assertTrue(voc.getId()>0);		
+	}
+
+	@Test
+	public void BupdateVocabulario() {
+		voc.setEnglish("testUpdated");
+		assertTrue(vocManager.updateVocabulario(voc));		
+	}
+
+	@Test
+	public void CfindVocabularyById() {
+		Vocabulario aux = vocManager.findVocabularyById(voc.getId());
+		assertTrue(aux.getId() == voc.getId());
 		
 	}
 
 	@Test
-	public void CtestGetVocabulary() {
-		VocabularioDAOImpl vocImpl = new VocabularioDAOImpl();
-		//Vocabulario voc = vocImpl.getVocabulary(testVocabulario.idVoc);
-		
-		//assertTrue(voc != null);
-		
+	public void DgetAll() {				
+		assertTrue(vocManager.getAll().size()>0);
 	}
 
 	@Test
-	public void DtestGetVocabularies() {
-		VocabularioDAOImpl vocImpl = new VocabularioDAOImpl();
-		ArrayList<Vocabulario> lvoc = (ArrayList<Vocabulario>) vocImpl.getVocabularies(testVocabulario.idUser);
-		
-		assertTrue(lvoc.size()>0);
-	}
-
-	@Test
-	public void EtestDelete() {
-		VocabularioDAOImpl vocImpl = new VocabularioDAOImpl();
-		//boolean result = vocImpl.delete(idVoc, idUser);
-		//assertTrue(result);
+	public void Edelete() {
+		assertTrue(vocManager.delete(voc.getId()));
 	}
 
 }

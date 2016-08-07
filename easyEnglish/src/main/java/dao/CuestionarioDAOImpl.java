@@ -32,7 +32,8 @@ public class CuestionarioDAOImpl implements ICuestionarioDAO{
 		}
 		//2
 		int fecha = 20160101;
-		Cuestionario newCuestionario = new Cuestionario(client,fecha, numPreguntas, -1);
+		UsuarioDAOImpl userManager = new UsuarioDAOImpl();
+		Cuestionario newCuestionario = new Cuestionario(userManager.findUserById(client),fecha, numPreguntas, -1);
 		//3
 		List<Pregunta> preg = preguntaManager.getAll();
 		Random r = new Random(System.currentTimeMillis());
@@ -107,9 +108,32 @@ public class CuestionarioDAOImpl implements ICuestionarioDAO{
 
 	public Set<Pregunta> getPreguntasCuestionario (int idCuestionario) {
 		
-		Cuestionario c = this.getCuestionarioObject(idCuestionario);
+		Session session = null;        
+        try{
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            Query query = session.createQuery("from Cuestionario where id = :id");
+            query.setParameter("id", idCuestionario);
+            
+            List q = query.list();
+            Cuestionario c = (Cuestionario)q.get(0);
+            //al utilizar un metodo del set, hibernate va  a la bd a por las preguntas,
+            //debe hacerse en dentro de la misma session que cuando vas a por el cuestionario
+            if (c.getPreguntas().isEmpty()){
+            	return null;
+            }
+                        
+            session.getTransaction().commit();
+            
+            return c.getPreguntas();
+                     
+        }catch (Exception e){
+            return null;
+        }finally{
+        	if (session.isOpen())
+        		session.close();
+        }
 		
-		return c.getPreguntas();
 	}
 
 	public boolean delete(int id) {

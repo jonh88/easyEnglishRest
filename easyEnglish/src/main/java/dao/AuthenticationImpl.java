@@ -210,7 +210,7 @@ public class AuthenticationImpl implements IAuthentication{
 	public int checkUser(String email, String psw) {
 		
 		String sql = "select * from tbl_users where email= ?";
-		String pass = "";
+		String passEncripted = "";
 		int idUsr = 0;
 		try {
 			Connection c = this.cn.getConn();
@@ -219,18 +219,17 @@ public class AuthenticationImpl implements IAuthentication{
 						
 			ResultSet rs = ps.executeQuery();
 			
-			while ((rs.next())&&(!pass.equals(psw))){
-				pass = rs.getString("pwd");
-				idUsr = rs.getInt("Id_usr");
-				
+			while (rs.next()){
+				passEncripted = rs.getString("pwd");
+				idUsr = rs.getInt("Id_usr");				
 			}
 			ps.close();
 			rs.close();
 			c.close();
-			//desencripto la psw 
-			String decrypted = this.decrypt(pass);
+			//encriptar la psw 
+			String encrypted = this.encrypt(psw);
 												
-			if (psw.equals(decrypted))
+			if (passEncripted.equals(encrypted))
 				return idUsr;
 			else
 				return 0;

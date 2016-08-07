@@ -2,13 +2,16 @@ package daoTests;
 
 import static org.junit.Assert.*;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 import dao.UsuarioDAOImpl;
+import domain.Cuestionario;
 import domain.Usuario;
+import domain.Vocabulario;
 
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -53,9 +56,22 @@ public class testUsuario {
 	}
 
 	@Test
-	public void FtestGetTestUser() {					
-		List<domain.Test> tests = userManager.getTestUser(4);		
-		assertTrue (tests.size()==2);
+	public void FtestGetTests() {					
+		Set<domain.Test> tests = userManager.getTestUser(4);		
+		assertTrue (tests.size()>0);
+	}
+	
+	@Test
+	public void FtestGetVocabularios() {					
+		Set<Vocabulario> vocs = userManager.getVocabularios(4);		
+		assertTrue (vocs.size()>0);
+	}
+	
+	@Test
+	public void FtestGetCuestionarios() {	
+		//id = 1 --> usuario de tests
+		Set<Cuestionario> cuestionarios = userManager.getCuestionarios(1);		
+		assertTrue (cuestionarios.size()>0);
 	}
 	
 	@Test

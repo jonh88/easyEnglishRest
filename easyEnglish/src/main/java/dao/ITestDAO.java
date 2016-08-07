@@ -11,6 +11,7 @@ import domain.Test;
 import domain.Vocabulario;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -18,13 +19,13 @@ import java.util.List;
  */
 public interface ITestDAO {
     
-    public int addTest (int client, int numPreguntas);
+    public Test insertTest (int client, int numPreguntas);
     
-    public int modify (Test test);
+    public boolean update (Test test);
     
-    public Test getTestObject(Integer id);
+    public Test getTestObject(int id);
     
-    public List<Vocabulario> getTest (int idUser);
+    public Set<Vocabulario> getVocabularioTest (int idTest);
     
     public boolean delete (int id);
         

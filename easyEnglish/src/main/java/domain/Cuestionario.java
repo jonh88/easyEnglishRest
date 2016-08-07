@@ -12,7 +12,7 @@ import java.util.Set;
 public class Cuestionario implements Serializable {
   
     private int id;    
-    private int user;
+    private Usuario user;
     private int fecha;    
     private int numPreguntas;    
     private int numFallos;
@@ -20,7 +20,7 @@ public class Cuestionario implements Serializable {
     
     public Cuestionario (){}
     
-    public Cuestionario (int usr, int date, int preguntas, int fallos){
+    public Cuestionario (Usuario usr, int date, int preguntas, int fallos){
         this.user = usr;
         this.fecha = date;
         this.numPreguntas = preguntas;
@@ -31,9 +31,9 @@ public class Cuestionario implements Serializable {
 
     public void setId(int idCuestionario) { this.id = idCuestionario; }
 
-    public int getUser() { return user; }
+    public Usuario getUser() { return user; }
 
-    public void setUser(int idUser) { this.user = idUser; }
+    public void setUser(Usuario user) { this.user = user; }
 
     public int getFecha() { return fecha; }
 

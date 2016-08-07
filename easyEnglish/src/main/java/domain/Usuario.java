@@ -7,6 +7,8 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.Set;
+
 import javax.xml.bind.annotation.*;
 
 /**
@@ -28,6 +30,9 @@ public class Usuario implements Serializable {
     private String email;
     @XmlElement
     private String pwd;
+    private Set<Cuestionario> cuestionarios;
+    private Set<Vocabulario> vocabularios;
+    private Set<Test> tests;
     
     public Usuario (){}    
     
@@ -59,5 +64,15 @@ public class Usuario implements Serializable {
 
     public void setPwd(String pwd) { this.pwd = pwd; }
     
+    public Set<Cuestionario> getCuestionarios(){ return this.cuestionarios; }
     
+    public void setCuestionarios (Set<Cuestionario> cuestionarios) {this.cuestionarios= cuestionarios;}
+    
+    public Set<Vocabulario> getVocabularios(){ return this.vocabularios; }
+    
+    public void setVocabularios (Set<Vocabulario> vocabularios) {this.vocabularios = vocabularios;}
+    
+    public Set<Test> getTests(){ return this.tests; }
+    
+    public void setTests (Set<Test> tests) {this.tests= tests;}
 }

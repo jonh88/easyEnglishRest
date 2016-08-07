@@ -6,10 +6,15 @@
 
 package dao;
 
+import domain.Cuestionario;
+import domain.Pregunta;
 //import conn.ConnectionDB;
 import domain.Tipo;
+import domain.Vocabulario;
 import conn.HibernateUtil;
 import java.util.List;
+import java.util.Set;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -21,11 +26,13 @@ public class TipoDAOImpl implements ITipoDAO{
     
    public List<Tipo> getTipos() {
        Session session = null;
+       Transaction transaccion = null;
        try{
     	   session = HibernateUtil.getSessionFactory().getCurrentSession();
-    	   Query query = session.createQuery("from tbl_typevoc");
-    	   
+    	   transaccion = session.beginTransaction();    			   
+    	   Query query = session.createQuery("from Tipo");    	   
     	   List listaTipos = query.list();
+    	   transaccion.commit();
     	   if ((listaTipos != null)&&(!listaTipos.isEmpty()))
     			   return (List<Tipo>)listaTipos;
     	   else
@@ -35,71 +42,82 @@ public class TipoDAOImpl implements ITipoDAO{
     	   e.printStackTrace();
     	   return null;
        }finally{
-    	   session.close();
+    	   if (session.isOpen())
+       		session.close();
        }
     }
   
     public Tipo addTipo(Tipo t) {
 
-        Session session = null;
+    	Session session = null;
         Transaction transaction = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
-            transaction = session.beginTransaction();
-            session.save(t);            
-            transaction.commit();
-            return t;            
+        	        	        		
+			session = HibernateUtil.getSessionFactory().getCurrentSession();
+	        transaction = session.beginTransaction();
+	        session.save(t);
+	        transaction.commit();
+	        return t;
+        	            
         }catch (Exception e){
         	e.printStackTrace();
             return null;
         }finally{
-        	session.close();
+        	if (session.isOpen())
+        		session.close();
         }
     }
 
-    public Tipo modify(Tipo tipoModified) {
-       Session session = null;                                                           
+    public boolean modify(Tipo tipoModified) {
+    	Session session =null;
         try  {
            session = HibernateUtil.getSessionFactory().getCurrentSession();
+           session.beginTransaction();
            session.saveOrUpdate(tipoModified);
            session.flush();
-           return tipoModified; 
-        }catch (Exception ex){
-        	ex.printStackTrace();
-            return null;
-        } finally{
-        	session.close();
+           session.getTransaction().commit();
+           return true;
+        }catch (Exception ex){        	
+            return false;
+        }finally{
+        	if (session.isOpen())
+        		session.close();
         }
     }
 
     public Tipo getTipo(Integer id) {
-        Session session = null;
+    	Session session = null;        
         try{
-           session = HibernateUtil.getSessionFactory().getCurrentSession();
-           Query query = session.createQuery("from tbl_typevoc t where t.id_type = :id");
-           query.setParameter("id", id);
-           
-           List listaTipos = query.list();
-           if ((listaTipos != null)&&(!listaTipos.isEmpty()))
-        	   return (Tipo) listaTipos.get(0);
-           else
-        	   return null;
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            Query query = session.createQuery("from Tipo where id = :id");
+            query.setParameter("id", id);
             
+            List q = query.list();
+            session.getTransaction().commit();
+            
+            if ((q != null)&&(q.isEmpty())){
+            	return null;
+            }else if ((q != null)&&(!q.isEmpty())){
+            	return (Tipo)q.get(0);
+            }
+            
+            return null;            
         }catch (Exception e){
-        	e.printStackTrace();
             return null;
         }finally{
-        	session.close();
+        	if (session.isOpen())
+        		session.close();
         }
     }
 
     public boolean delete(int id) {
-        Session session = null;
+    	Session session = null;
         Transaction transaction = null;
         try{
         	session = HibernateUtil.getSessionFactory().getCurrentSession();
         	transaction = session.beginTransaction();
-        	Query createQuery = session.createQuery("delete from tbl_typevoc t where t.id_type = :id");
+        	Query createQuery = session.createQuery("delete from Tipo where id = :id");
         	createQuery.setParameter("id", id);
         	createQuery.executeUpdate();
         	transaction.commit();
@@ -108,10 +126,39 @@ public class TipoDAOImpl implements ITipoDAO{
         	e.printStackTrace();
             return false;
         }finally{
-        	session.close();
+        	if (session.isOpen())
+        		session.close();
         }
     }
     
+    public Set<Vocabulario> getVocabulariosTipo (int idTipo){
+    	Session session = null;        
+        try{
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            Query query = session.createQuery("from Tipo where id = :id");
+            query.setParameter("id", idTipo);
+            
+            List q = query.list();
+            Tipo c = (Tipo)q.get(0);
+            //al utilizar un metodo del set, hibernate va  a la bd a por el contenido,
+            //debe hacerse en dentro de la misma session que cuando vas a por la entidad.
+            if (c.getVocabularios().isEmpty()){
+            	return null;
+            }
+                        
+            session.getTransaction().commit();
+            
+            return c.getVocabularios();
+                     
+        }catch (Exception e){
+            return null;
+        }finally{
+        	if (session.isOpen())
+        		session.close();
+        }
+    }
+    /*
     private boolean typeExists (String type){
         String existe = "select * from tbl_typevoc where type ='"+type+"';";
         boolean result = false;
@@ -122,6 +169,6 @@ public class TipoDAOImpl implements ITipoDAO{
             return false;
         }
     }
-	
+	*/
     
 }

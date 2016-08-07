@@ -6,9 +6,13 @@
 
 package dao;
 
+import domain.Cuestionario;
 import domain.Test;
 import domain.Usuario;
+import domain.Vocabulario;
+
 import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -28,5 +32,10 @@ public interface IUsuarioDAO {
     
     public boolean delete (int client);
     
-    public List<Test> getTestUser (int idUser);
+    public Set<Test> getTestUser (int idUser);
+    
+    public Set<Vocabulario> getVocabularios(int idUser);
+    
+    public Set<Cuestionario> getCuestionarios(int idUser);
+    
 }

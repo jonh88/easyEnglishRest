@@ -14,7 +14,21 @@
 			<column name="spanish"/>
 		</property>
 		
-		<many-to-one name="tipo" class="domain.Tipo" column="id_type" not-null="true"/>
+		<many-to-one name="tipo" class="domain.Tipo" column="tbl_typeVoc_id_type" not-null="true"/>
+		
+		<set name="usuarios" table="tbl_voc_user" cascade="all" inverse="true">
+			<key>
+				<column name="tbl_Vocabulary_id_Vocabulary"/>
+			</key>
+			<many-to-many column="tbl_Users_Id_usr" class="domain.Usuario" />
+		</set>
+		
+		<set name="tests" table="tbl_test_vocab" cascade="all" inverse="false">
+			<key>
+				<column name="tbl_Vocabulary_id_Vocabulary"/>
+			</key>
+			<many-to-many column="tbl_Test_Id_test" class="domain.Test" />
+		</set>
 		
 	</class>
 </hibernate-mapping>

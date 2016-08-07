@@ -7,6 +7,8 @@
 package domain;
 
 import java.io.Serializable;
+import java.util.Set;
+
 import javax.xml.bind.annotation.*;
 
 @XmlRootElement(name="tipo")
@@ -16,6 +18,7 @@ public class Tipo implements Serializable {
     private int id;
     @XmlElement
     private String type;
+    private Set<Vocabulario> vocabularios;
     
     public Tipo(){} 
     
@@ -31,6 +34,8 @@ public class Tipo implements Serializable {
 
     public void setType(String type) { this.type = type; }
     
+    public Set<Vocabulario> getVocabularios(){ return this.vocabularios; }
     
+    public void setVocabularios (Set<Vocabulario> vocabularios) {this.vocabularios= vocabularios;}
     
 }
