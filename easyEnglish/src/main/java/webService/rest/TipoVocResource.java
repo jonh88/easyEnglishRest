@@ -135,12 +135,11 @@ public class TipoVocResource {
 			 int validado = this.authz.validaToken(token, id);
 			  
 			  switch (validado){
-			  	case 1:			  		
-			  	//primero obtengo el id del tipo
-			        Tipo t = tipoManager.modify(updatedTipo);
+			  	case 1:			  					  	
+			        boolean res = tipoManager.modify(updatedTipo);
 			                     
-			        if (t != null){
-			            return Response.ok(t).build();
+			        if (res){
+			            return Response.ok().build();
 			        }else{
 			            return Response.notModified().build();
 			        }      			        

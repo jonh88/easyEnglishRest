@@ -14,7 +14,7 @@
 			<column name="spanish"/>
 		</property>
 		
-		<many-to-one name="tipo" class="domain.Tipo" column="tbl_typeVoc_id_type" not-null="true"/>
+		<many-to-one name="tipo" class="domain.Tipo" column="tbl_typeVoc_id_type" not-null="true" lazy="false"/>
 		
 		<set name="usuarios" table="tbl_voc_user" cascade="all" inverse="true">
 			<key>

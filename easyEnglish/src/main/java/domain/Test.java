@@ -11,22 +11,24 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.*;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  *
  * @author Jonh
  */
-@XmlRootElement(name="test")
-@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlRootElement(name="test")
+//@XmlAccessorType(XmlAccessType.FIELD)
 public class Test implements Serializable {
-    @XmlAttribute
+    //@XmlAttribute
     private int id;
-    @XmlElement
+    //@XmlElement
     private Usuario user;
-    @XmlElement
+    //@XmlElement
     private int fecha;
-    @XmlElement
+    //@XmlElement
     private int numPreguntas;
-    @XmlElement
+    //@XmlElement
     private int numFallos;
     Set<Vocabulario> vocabularios = new HashSet<Vocabulario>();
     
@@ -43,6 +45,7 @@ public class Test implements Serializable {
 
     public void setId(int idTest) { this.id = idTest; }
 
+    @JsonIgnore
     public Usuario getUser() { return this.user; }
 
     public void setUser(Usuario user) { this.user = user; }
@@ -59,6 +62,7 @@ public class Test implements Serializable {
 
     public void setNumFallos(int numFallos) { this.numFallos = numFallos; }
     
+    @JsonIgnore
     public Set<Vocabulario> getVocabularios() {return this.vocabularios; }
     
     public void setVocabularios(Set<Vocabulario> vocs) {this.vocabularios = vocs;}

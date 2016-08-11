@@ -3,6 +3,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 
 /**
  *
@@ -11,11 +14,11 @@ import java.util.Set;
 
 public class Cuestionario implements Serializable {
   
-    private int id;    
+    private int id;  
     private Usuario user;
     private int fecha;    
     private int numPreguntas;    
-    private int numFallos;
+    private int numFallos;    
     private Set<Pregunta> preguntas = new HashSet<Pregunta>();
     
     public Cuestionario (){}

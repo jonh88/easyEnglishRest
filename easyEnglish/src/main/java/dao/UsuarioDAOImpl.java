@@ -14,6 +14,7 @@ import domain.Usuario;
 import domain.Vocabulario;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -269,11 +270,89 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
             return c.getCuestionarios();
                      
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
         		session.close();
         }
 		
+	}
+
+	public boolean insertVocabulario(int idUser, Vocabulario voc) {
+		Session session = null;        
+        try{
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            session.beginTransaction();
+            Query query = session.createQuery("from Usuario where id = :id");
+            query.setParameter("id", idUser);
+            
+            List q = query.list();
+            Usuario user = (Usuario)q.get(0);
+            
+            user.getVocabularios().add(voc);
+                                              
+            session.getTransaction().commit();
+            
+            return true;
+                     
+        }catch (Exception e){
+            return false;
+        }finally{
+        	if (session.isOpen())
+        		session.close();
+        }
+		
+	}
+
+	public boolean deleteVocabulario (int idUser, int idVoc){
+		//VocabularioDAOImpl vocManager = new VocabularioDAOImpl();
+		//Vocabulario voc = vocManager.findVocabularyById(idVoc);
+		
+		Session session = null;     
+		Transaction tran= null;
+        try{
+            session = HibernateUtil.getSessionFactory().getCurrentSession();
+            tran = session.beginTransaction();
+            Query query = session.createQuery("from Usuario where id = :id");
+            query.setParameter("id", idUser);
+            
+            List q = query.list();
+            Usuario user = (Usuario)q.get(0);
+            
+            List<Vocabulario> vocs = new ArrayList<Vocabulario>();
+            
+            vocs.addAll(user.getVocabularios());
+            
+            boolean f = false;
+            int index = 0;
+            for (Vocabulario v : vocs){
+            	if (v.getId() == idVoc){
+            		f = true;
+            		break;
+            	}            		
+            	index++;
+            }
+            
+            vocs.remove(index);
+            
+            Set<Vocabulario> newSet = new HashSet<Vocabulario>(vocs);
+            
+            user.setVocabularios(newSet);
+            
+            session.save(user);
+            tran.commit();
+                                              
+            //session.getTransaction().commit();
+            
+            return f;
+                     
+        }catch (Exception e){
+        	e.printStackTrace();
+            return false;
+        }finally{
+        	if (session.isOpen())
+        		session.close();
+        }
 	}
 }

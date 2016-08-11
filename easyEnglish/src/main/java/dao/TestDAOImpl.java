@@ -27,8 +27,8 @@ public class TestDAOImpl implements ITestDAO{
 		 * 2. Crear test con num_fallos -1 (no corregido).
 		 * 3. Obtener lista de todas las preguntas y eliminar aleatoriamente
 		 * 	  hasta que tamaño de lista = numPreguntas.
-		 * 4. Insertar preguntas en set cuestionario.
-		 * 5. Persistir cuestionario.	 
+		 * 4. Insertar Vocs al Test.
+		 * 5. Persistir Test.	 
 		 */
 		
 		//1

@@ -11,12 +11,15 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.*;
 
-@XmlRootElement(name="tipo")
-@XmlAccessorType(XmlAccessType.FIELD)
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
+//@XmlRootElement(name="tipo")
+//@XmlAccessorType(XmlAccessType.FIELD)
 public class Tipo implements Serializable {
-    @XmlAttribute
+    //@XmlAttribute
     private int id;
-    @XmlElement
+    //@XmlElement
     private String type;
     private Set<Vocabulario> vocabularios;
     
@@ -34,6 +37,7 @@ public class Tipo implements Serializable {
 
     public void setType(String type) { this.type = type; }
     
+    @JsonIgnore
     public Set<Vocabulario> getVocabularios(){ return this.vocabularios; }
     
     public void setVocabularios (Set<Vocabulario> vocabularios) {this.vocabularios= vocabularios;}

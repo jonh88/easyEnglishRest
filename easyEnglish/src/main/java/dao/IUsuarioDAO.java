@@ -38,4 +38,8 @@ public interface IUsuarioDAO {
     
     public Set<Cuestionario> getCuestionarios(int idUser);
     
+    public boolean insertVocabulario(int idUser, Vocabulario voc);
+    
+    public boolean deleteVocabulario (int idUser, int idVoc);
+    
 }

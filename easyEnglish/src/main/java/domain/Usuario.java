@@ -1,35 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package domain;
 
 import java.io.Serializable;
 import java.util.Set;
-
-import javax.xml.bind.annotation.*;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
  * @author Jonh
  */
 
-@XmlRootElement(name="usuario")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class Usuario implements Serializable {
     
-    @XmlAttribute
-    private int id;
-    @XmlElement
-    private String name;
-    @XmlElement
-    private String apellidos;
-    @XmlElement
-    private String email;
-    @XmlElement
-    private String pwd;
+    private int id;    
+    private String name;    
+    private String apellidos;   
+    private String email;   
+    private String pwd; 
     private Set<Cuestionario> cuestionarios;
     private Set<Vocabulario> vocabularios;
     private Set<Test> tests;
@@ -60,18 +46,22 @@ public class Usuario implements Serializable {
 
     public void setEmail(String email) { this.email = email; }
 
+    @JsonIgnore
     public String getPwd() { return pwd; }
 
     public void setPwd(String pwd) { this.pwd = pwd; }
     
+    @JsonIgnore
     public Set<Cuestionario> getCuestionarios(){ return this.cuestionarios; }
     
     public void setCuestionarios (Set<Cuestionario> cuestionarios) {this.cuestionarios= cuestionarios;}
     
+    @JsonIgnore
     public Set<Vocabulario> getVocabularios(){ return this.vocabularios; }
     
     public void setVocabularios (Set<Vocabulario> vocabularios) {this.vocabularios = vocabularios;}
     
+    @JsonIgnore
     public Set<Test> getTests(){ return this.tests; }
     
     public void setTests (Set<Test> tests) {this.tests= tests;}

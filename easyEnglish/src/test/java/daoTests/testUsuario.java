@@ -8,8 +8,11 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import dao.TipoDAOImpl;
 import dao.UsuarioDAOImpl;
+import dao.VocabularioDAOImpl;
 import domain.Cuestionario;
+import domain.Tipo;
 import domain.Usuario;
 import domain.Vocabulario;
 
@@ -18,6 +21,7 @@ import domain.Vocabulario;
 public class testUsuario {
 	
 	private UsuarioDAOImpl userManager = new UsuarioDAOImpl();
+	private static Vocabulario voc;
 
 	@Test
 	public void AtestAddUser() {
@@ -62,20 +66,52 @@ public class testUsuario {
 	}
 	
 	@Test
-	public void FtestGetVocabularios() {					
+	public void GtestGetVocabularios() {					
 		Set<Vocabulario> vocs = userManager.getVocabularios(4);		
 		assertTrue (vocs.size()>0);
 	}
 	
 	@Test
-	public void FtestGetCuestionarios() {	
+	public void HtestGetCuestionarios() {	
 		//id = 1 --> usuario de tests
 		Set<Cuestionario> cuestionarios = userManager.getCuestionarios(1);		
 		assertTrue (cuestionarios.size()>0);
 	}
 	
 	@Test
-	public void GtestDelete() {
+	public void IinsertVocabulario() {
+		TipoDAOImpl tipoManager = new TipoDAOImpl();
+		Tipo t = tipoManager.getTipo(4);
+		
+		int idUser = 4;
+		voc = new Vocabulario();
+		voc.setEnglish("test");
+		voc.setSpanish("prueba");
+		voc.setTipo(t);
+		
+		VocabularioDAOImpl vocManager = new VocabularioDAOImpl();
+		vocManager.insertVocabulary(voc);
+		
+		boolean success = userManager.insertVocabulario(idUser, voc);
+		
+		//vocManager.delete(voc.getId());
+		
+		assertTrue(success);				
+	}	
+	
+	@Test
+	public void JdeleteVocabulario() {
+				
+		boolean success = userManager.deleteVocabulario(4, voc.getId());
+		
+		VocabularioDAOImpl vocManager = new VocabularioDAOImpl();
+		vocManager.delete(voc.getId());
+		
+		assertTrue(success);				
+	}
+	
+	@Test
+	public void KtestDelete() {
 		Usuario user = userManager.findUserByEmail("email@changed.com");
 		assertTrue(userManager.delete(user.getId()));
 		assertTrue(true);

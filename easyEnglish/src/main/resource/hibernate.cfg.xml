@@ -19,7 +19,9 @@
         <property name="hibernate.current_session_context_class">thread</property>
         
         <!-- Outputs the SQL queries, should be disabled in Production -->
-		<property name="hibernate.show_sql">true</property>				
+		<property name="hibernate.show_sql">true</property>		
+		
+		<property name="hibernate.enable_lazy_load_no_trans">true</property>		
         
         <mapping resource="usuario.hbm.xml"/>
         <mapping resource="tipo.hbm.xml"/>

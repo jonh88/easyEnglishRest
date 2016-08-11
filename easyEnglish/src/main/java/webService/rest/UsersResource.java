@@ -10,6 +10,7 @@ import dao.UsuarioDAOImpl;
 import dao.VocabularioDAOImpl;
 import domain.Usuario;
 import domain.Vocabulario;
+import domain.Cuestionario;
 import domain.Test;
 import domain.Tipo;
 import dao.AuthenticationImpl;
@@ -19,7 +20,10 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -34,6 +38,9 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+
+import org.hibernate.Hibernate;
+
 import javax.ws.rs.core.Response.Status;
 
 import com.google.gson.Gson;
@@ -72,7 +79,7 @@ public class UsersResource {
 			  switch (validado){
 			  	case 1:			  		
 			  		//buscamos el usuario en la BD, lo instanciamos y devolvemos    	  
-			        Usuario user = userManager.findUserById(idUser);
+			        Usuario user = userManager.findUserById(idUser);			       
 			        
 			        if (user == null){
 			           return Response.status(Status.NO_CONTENT).entity("User not found in database.").build();
@@ -111,11 +118,11 @@ public class UsersResource {
 			  switch (validado){
 			  	case 1:			  		
 			  	//obtenemos lista de los test realizados por el user  
-			        List<Test> result = userManager.getTestUser(idUser);
-			        if (result.isEmpty()){
-			            Response.status(Status.NO_CONTENT).entity("User has no tests.").build();
+			        Set<Test> result = userManager.getTestUser(idUser);
+			        if ((result == null)||(result.isEmpty())){			        	
+			           return Response.status(Status.NO_CONTENT).entity("User has no tests.").build();
 			        }            			        
-			        return Response.ok((ArrayList<Test>)result).build(); 
+			        return Response.ok(result).build(); 
 			  	case -1:
 			  		return Response.status(Status.UNAUTHORIZED).entity("Token missmatch with database's token.").build();
 			  	case -2:
@@ -147,7 +154,7 @@ public class UsersResource {
 			  
 			  switch (validado){
 			  	case 1:			  		
-			  		List<Vocabulario> result = vocabularioManager.getVocabularies(idUser);
+			  		Set<Vocabulario> result = userManager.getVocabularios(idUser);
 			        
 			        if (result.isEmpty()){
 			        	Response.status(Status.NOT_FOUND).entity("Vocabulary not found.").build();
@@ -204,9 +211,9 @@ public class UsersResource {
 					Gson gson = new Gson();
 			        Vocabulario voc = gson.fromJson(result,Vocabulario.class);
 			        
-			    	Vocabulario res = vocabularioManager.addVocabulary(voc, idUser);
+			    	boolean res = userManager.insertVocabulario(idUser, voc);
 			    	
-			        if (res != null){
+			        if (res){
 			            return Response.ok().build();
 			        }else{
 			            return Response.serverError().build();
@@ -280,9 +287,9 @@ public class UsersResource {
 			  
 			  switch (validado){
 			  	case 1:			  		
-			  		int result = testManager.addTest(idUser, numPreguntas); 
-			        if (result != 0){
-			            return Response.status(Response.Status.OK).entity(result).build();
+			  		Test test = testManager.insertTest(idUser, numPreguntas); 
+			        if (test != null){
+			            return Response.status(Response.Status.OK).entity(test).build();
 			        }else{
 			        	return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Error creating test.").build();
 			        }			        

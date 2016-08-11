@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Set;
+
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -104,7 +106,7 @@ public class TestResource {
 			  switch (validado){
 			  	case 1:
 			  		//buscamos el usuario en la BD, lo instanciamos y devolvemos   
-			        List<Vocabulario> result = testManager.getTest(idTest);
+			        Set<Vocabulario> result = testManager.getVocabularioTest(idTest);
 			        
 			        if (result.isEmpty()){
 			        	return Response.status(Response.Status.NOT_FOUND).entity("Empty test.").build();
@@ -160,9 +162,9 @@ public class TestResource {
 					Gson gson = new Gson();
 			        Test t = gson.fromJson(result,Test.class);
 			        
-			    	int res = testManager.modify(t);
+			    	boolean res = testManager.update(t);
 			    	
-			        if (res > 0){
+			        if (res){
 			            return Response.ok().build();
 			        }else{
 			        	return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Error updating test").build();

@@ -24,7 +24,7 @@ public class Authz {
 	  public Response getToken(@QueryParam("user")String email, @QueryParam("pass") String pass)  {
 		  this.auth = new AuthenticationImpl();
 		  String token = this.auth.getToken(email, pass);
-		  
+		  System.out.println(token);
 		  if (token == null)
 			  return Response.status(Response.Status.FORBIDDEN).build();
 		  else
@@ -32,5 +32,3 @@ public class Authz {
 	  }
 	
 }
-
-

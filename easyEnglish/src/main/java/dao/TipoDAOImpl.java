@@ -131,6 +131,7 @@ public class TipoDAOImpl implements ITipoDAO{
         }
     }
     
+    
     public Set<Vocabulario> getVocabulariosTipo (int idTipo){
     	Session session = null;        
         try{
@@ -158,6 +159,7 @@ public class TipoDAOImpl implements ITipoDAO{
         		session.close();
         }
     }
+    
     /*
     private boolean typeExists (String type){
         String existe = "select * from tbl_typevoc where type ='"+type+"';";

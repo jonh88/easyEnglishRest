@@ -115,7 +115,6 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
         }
     }
 
-	
     public List<Vocabulario> getAll() {
     	Session session = null;        
         try{

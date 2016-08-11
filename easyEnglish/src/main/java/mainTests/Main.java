@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.junit.Test;
 
@@ -19,7 +20,9 @@ import conn.HibernateUtil;
 import dao.AuthenticationImpl;
 import dao.CuestionarioDAOImpl;
 import dao.PreguntaDAOImpl;
+import dao.TipoDAOImpl;
 import dao.UsuarioDAOImpl;
+import dao.VocabularioDAOImpl;
 import daoTests.testUsuario;
 import domain.*;
 
@@ -49,22 +52,10 @@ public class Main {
 		session.save(cuestionario);		
 		session.getTransaction().commit();
 			*/	
-		
-		
-		UsuarioDAOImpl userManager = new UsuarioDAOImpl();
-    	Usuario user = userManager.findUserById(4);
+		VocabularioDAOImpl vocManager = new VocabularioDAOImpl();
+		boolean a = vocManager.delete(36);
     	
-    	System.out.println(user.getPwd());
-    	
-    	AuthenticationImpl auth = new AuthenticationImpl();
-    	user.setPwd(auth.encrypt(user.getPwd()));
-    	
-    	boolean success = userManager.updateUser(user);
-    	
-    	System.out.println(success);
-    	
-    	
-					
+		System.out.println(a);
 	}
 	
 	public static void init(){

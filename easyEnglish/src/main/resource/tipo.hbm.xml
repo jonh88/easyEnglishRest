@@ -7,12 +7,13 @@
 			<generator class="increment" />
 		</id>
 		<property name="type" column="type" type="string" />	
-		
+		  
 		<set name="vocabularios" cascade="all" inverse="true">
 			<key>
 				<column name="tbl_typeVoc_id_type" />
 			</key>
 			<one-to-many class="domain.Vocabulario" />
-		</set>	
+		</set>
+			
 	</class>
 </hibernate-mapping>
