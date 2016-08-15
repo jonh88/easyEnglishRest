@@ -52,8 +52,8 @@ public class Main {
 		session.save(cuestionario);		
 		session.getTransaction().commit();
 			*/	
-		VocabularioDAOImpl vocManager = new VocabularioDAOImpl();
-		boolean a = vocManager.delete(36);
+		UsuarioDAOImpl vocManager = new UsuarioDAOImpl();
+		boolean a = vocManager.deleteVocabulario(2, 12);
     	
 		System.out.println(a);
 	}

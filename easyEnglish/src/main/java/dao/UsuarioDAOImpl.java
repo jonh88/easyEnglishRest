@@ -15,6 +15,7 @@ import domain.Vocabulario;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -34,22 +35,29 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
     
     private ConnectionDB cn;
     private TestDAOImpl managerTest;
+    private VocabularioDAOImpl vocManager;
     
     public UsuarioDAOImpl(){
         this.cn = new ConnectionDB();
         this.managerTest = new TestDAOImpl();
+        this.vocManager = new VocabularioDAOImpl();
     }
 
     public Usuario addUser(Usuario user) {
+    	
+    	boolean exist = false;
+    	if (this.userExists(user.getEmail()))
+    		exist = true;
+    	
        Session session = null;
        Transaction transaction = null;
-        try {
-        	//encriptar pass
-        	AuthenticationImpl auth = new AuthenticationImpl();
-        	user.setPwd(auth.encrypt(user.getPwd()));
-        	
+        try {      	        	
         	//añadir usuario solo si no existe
-        	if (!this.userExists(user.getEmail())){
+        	if (!exist){
+        		//encriptar pass
+            	AuthenticationImpl auth = new AuthenticationImpl();
+            	user.setPwd(auth.encrypt(user.getPwd()));
+            	
         		session = HibernateUtil.getSessionFactory().getCurrentSession();
                 transaction = session.beginTransaction();
                 session.save(user);
@@ -62,7 +70,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
         }catch (Exception e){
             return null;
         }finally{
-        	if (session.isOpen())
+        	if ((session != null)&&(session.isOpen()))
         		session.close();
         }
         
@@ -73,8 +81,14 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
         try  {
            session = HibernateUtil.getSessionFactory().getCurrentSession();
            session.beginTransaction();
-           session.saveOrUpdate(user);
-           session.flush();
+           Usuario u = (Usuario)session.get(Usuario.class, user.getId());
+           u.setEmail(user.getEmail());
+           u.setName(user.getName());
+           u.setApellidos(user.getApellidos());
+           //encriptar pass
+       	   AuthenticationImpl auth = new AuthenticationImpl();
+       	   u.setPwd(auth.encrypt(user.getPwd()));
+           
            session.getTransaction().commit();
            return true;
         }catch (Exception ex){        	
@@ -282,21 +296,43 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
 	public boolean insertVocabulario(int idUser, Vocabulario voc) {
 		Session session = null;        
         try{
+        	/**
+             * comprobar que el vocabulario existe en la bbdd, 
+             * sino insertar y luego añadir al user.
+             */
+            Vocabulario v;
+            if (vocManager.vocabularyExists(voc.getEnglish()))
+            	v = vocManager.findVocabularyByEnglish(voc.getEnglish());          
+            else
+            	v = vocManager.insertVocabulary(voc); 
+        	        	
             session = HibernateUtil.getSessionFactory().getCurrentSession();
             session.beginTransaction();
-            Query query = session.createQuery("from Usuario where id = :id");
-            query.setParameter("id", idUser);
+            Usuario user = (Usuario)session.get(Usuario.class, idUser);                                  	           
             
-            List q = query.list();
-            Usuario user = (Usuario)q.get(0);
+            //comprobar si ya tiene insertado el voc
+            Iterator it = user.getVocabularios().iterator();            
+            Vocabulario iterador;
+            boolean insertado = false;
+            while (it.hasNext()){
+            	iterador = (Vocabulario)it.next();
+            	if (iterador.getEnglish().equals(v.getEnglish())){
+            		insertado = true;
+            		break;
+            	}            		
+            }
             
-            user.getVocabularios().add(voc);
-                                              
-            session.getTransaction().commit();
+            if (!insertado){
+            	user.getVocabularios().add(v);
+            	session.getTransaction().commit();
+            }else
+            	return false;
+            
             
             return true;
                      
         }catch (Exception e){
+        	e.printStackTrace();
             return false;
         }finally{
         	if (session.isOpen())
@@ -334,17 +370,16 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
             	index++;
             }
             
-            vocs.remove(index);
-            
-            Set<Vocabulario> newSet = new HashSet<Vocabulario>(vocs);
-            
-            user.setVocabularios(newSet);
-            
-            session.save(user);
-            tran.commit();
-                                              
-            //session.getTransaction().commit();
-            
+            if (f){
+            	vocs.remove(index);
+            	Set<Vocabulario> newSet = new HashSet<Vocabulario>(vocs);
+                
+                user.setVocabularios(newSet);
+                
+                session.save(user);
+                tran.commit();
+            }
+            	            
             return f;
                      
         }catch (Exception e){

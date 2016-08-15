@@ -32,6 +32,10 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
     }
     
     public Vocabulario insertVocabulary(Vocabulario voc) {
+    	//todos los vocabularios iran en lowerCase
+    	voc.setEnglish(voc.getEnglish().toLowerCase());
+    	voc.setSpanish(voc.getSpanish().toLowerCase());
+    	
     	Session session = null;
         Transaction transaction = null;
         try {
@@ -140,10 +144,10 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
         }
 	}
    
-    /*
-    private boolean vocabularyExists (String mEnglish){
-        
-		 Vocabulario voc = this.findVocabularyByEnglish(mEnglish);
+    
+    public boolean vocabularyExists (String mEnglish){
+    	        
+		 Vocabulario voc = this.findVocabularyByEnglish(mEnglish.toLowerCase());
 		 if (voc == null)
 		 	return false;
 		 else
@@ -151,7 +155,7 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
     	      
     }
     
-    private Vocabulario findVocabularyByEnglish(String english){
+    public Vocabulario findVocabularyByEnglish(String english){
     	Session session = null;        
         try{
             session = HibernateUtil.getSessionFactory().getCurrentSession();
@@ -177,6 +181,6 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
         }
     	
     }
-    */
+    
     
 }

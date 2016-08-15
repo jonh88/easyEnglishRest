@@ -75,11 +75,17 @@ public class TestDAOImpl implements ITestDAO{
         try  {
            session = HibernateUtil.getSessionFactory().getCurrentSession();
            session.beginTransaction();
-           session.saveOrUpdate(test);
-           session.flush();
+           //updating just some values
+           Test t = (Test)session.get(Test.class, test.getId());
+           t.setFecha(test.getFecha());
+           t.setNumFallos(test.getNumFallos());
+           t.setNumPreguntas(test.getNumPreguntas());
+           //session.saveOrUpdate(test);
+           //session.flush();
            session.getTransaction().commit();
            return true;
-        }catch (Exception ex){        	
+        }catch (Exception ex){   
+        	ex.printStackTrace();
             return false;
         }finally{
         	if (session.isOpen())

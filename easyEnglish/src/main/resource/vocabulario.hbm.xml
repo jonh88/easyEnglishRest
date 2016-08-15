@@ -23,7 +23,7 @@
 			<many-to-many column="tbl_Users_Id_usr" class="domain.Usuario" />
 		</set>
 		
-		<set name="tests" table="tbl_test_vocab" cascade="all" inverse="false">
+		<set name="tests" table="tbl_test_vocab" cascade="all" inverse="true">
 			<key>
 				<column name="tbl_Vocabulary_id_Vocabulary"/>
 			</key>

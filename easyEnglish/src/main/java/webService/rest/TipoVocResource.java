@@ -9,7 +9,11 @@ package webService.rest;
 import dao.AuthenticationImpl;
 import dao.TipoDAOImpl;
 import domain.Tipo;
+import domain.Vocabulario;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.List;
 
@@ -25,8 +29,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import com.google.gson.Gson;
+
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -91,17 +99,33 @@ public class TipoVocResource {
   
     @POST
     @Consumes("application/json")
-    public Response createTipo(@QueryParam("id") int id, @HeaderParam("token")String token, Tipo newTipo){
+    public Response createTipo(@QueryParam("id") int id, @HeaderParam("token")String token, InputStream newTipo){
     	try{
 			 this.authz = new AuthenticationImpl();			  
 			 int validado = this.authz.validaToken(token, id);
 			  
 			  switch (validado){
-			  	case 1:			  		
-			  		Tipo tipoNuevo = tipoManager.addTipo(newTipo);
+			  	case 1:	
+			  		StringBuilder sB = new StringBuilder();
 			    	
-			        if (tipoNuevo != null){
-			            return Response.ok(tipoNuevo).build();
+					try {
+						BufferedReader in = new BufferedReader(new InputStreamReader(newTipo));
+						String line = null;
+						while ((line = in.readLine()) != null) {
+							sB.append(line);
+						}
+					} catch (Exception e) {
+						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Error parsing").build();
+					}
+					String result = sB.toString();
+
+					Gson gson = new Gson();
+			        Tipo t = gson.fromJson(result,Tipo.class);
+			  					  		
+			  		Tipo tipoNuevo = tipoManager.addTipo(t);
+			    	
+			        if (tipoNuevo != null){			            
+			            return Response.status(Status.OK).entity(tipoNuevo).type(MediaType.APPLICATION_JSON).build();
 			        }else{
 			            return Response.notModified().build();
 			        }  			        
@@ -129,14 +153,30 @@ public class TipoVocResource {
     @PUT
     @Path("{idTipo}")
     @Consumes("application/json")    
-    public Response modifyTipo(@PathParam("idTipo") int idTipo, @QueryParam("id") int id, @HeaderParam("token")String token, Tipo updatedTipo) {
+    public Response modifyTipo(@PathParam("idTipo") int idTipo, @QueryParam("id") int id, @HeaderParam("token")String token, InputStream updatedTipo) {
     	try{
 			 this.authz = new AuthenticationImpl();			  
 			 int validado = this.authz.validaToken(token, id);
 			  
 			  switch (validado){
-			  	case 1:			  					  	
-			        boolean res = tipoManager.modify(updatedTipo);
+			  	case 1:	
+			  		StringBuilder sB = new StringBuilder();
+			    	
+					try {
+						BufferedReader in = new BufferedReader(new InputStreamReader(updatedTipo));
+						String line = null;
+						while ((line = in.readLine()) != null) {
+							sB.append(line);
+						}
+					} catch (Exception e) {
+						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Error parsing").build();
+					}
+					String result = sB.toString();
+
+					Gson gson = new Gson();
+			        Tipo t = gson.fromJson(result,Tipo.class);
+			  					  		
+			        boolean res = tipoManager.modify(t);
 			                     
 			        if (res){
 			            return Response.ok().build();

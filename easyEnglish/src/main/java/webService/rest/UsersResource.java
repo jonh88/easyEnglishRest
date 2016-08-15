@@ -36,6 +36,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -82,7 +83,8 @@ public class UsersResource {
 			        Usuario user = userManager.findUserById(idUser);			       
 			        
 			        if (user == null){
-			           return Response.status(Status.NO_CONTENT).entity("User not found in database.").build();
+			           return Response.status(Status.NO_CONTENT).build();
+			        	//return Response.status(Status.NO_CONTENT).entity("User not found in database.").build();
 			        }			       
 			        return Response.status(Status.OK).entity(user).build();
 			  	case -1:
@@ -119,8 +121,9 @@ public class UsersResource {
 			  	case 1:			  		
 			  	//obtenemos lista de los test realizados por el user  
 			        Set<Test> result = userManager.getTestUser(idUser);
-			        if ((result == null)||(result.isEmpty())){			        	
-			           return Response.status(Status.NO_CONTENT).entity("User has no tests.").build();
+			        if ((result == null)||(result.isEmpty())){		
+			        	return Response.status(204).build();
+			          //return Response.status(Status.NO_CONTENT).entity("User has no tests.").build();
 			        }            			        
 			        return Response.ok(result).build(); 
 			  	case -1:
@@ -156,8 +159,8 @@ public class UsersResource {
 			  	case 1:			  		
 			  		Set<Vocabulario> result = userManager.getVocabularios(idUser);
 			        
-			        if (result.isEmpty()){
-			        	Response.status(Status.NOT_FOUND).entity("Vocabulary not found.").build();
+			        if ((result == null)||(result.isEmpty())){
+			        	return Response.status(204).build();
 			         }
 			         
 			         return Response.status(Status.OK).entity(result).build();
@@ -216,7 +219,7 @@ public class UsersResource {
 			        if (res){
 			            return Response.ok().build();
 			        }else{
-			            return Response.serverError().build();
+			            return Response.status(Status.NOT_MODIFIED).build();
 			        } 
 			  	case -1:
 			  		return Response.status(Status.UNAUTHORIZED).entity("Token missmatch with database's token.").build();
@@ -248,9 +251,8 @@ public class UsersResource {
 			 int validado = this.authz.validaToken(token, id);
 			  
 			  switch (validado){
-			  	case 1:			
-			  		//TO-CHECK
-			  		 if (vocabularioManager.delete(idVoc))
+			  	case 1:						  		
+			  		 if (userManager.deleteVocabulario(idUser, idVoc))
 			             return Response.ok().build();
 			         else          
 			             return Response.notModified().build();
@@ -340,24 +342,42 @@ public class UsersResource {
         if (userInserted == null){
         	return Response.notModified().build();
         }else{
-        	return Response.ok(userInserted).build();            
+        	return Response.status(Status.OK).entity(userInserted).type(MediaType.APPLICATION_JSON).build();            
         }
     }
               
     @PUT
     @Path("{idUser}")
     @Consumes("application/json")    
-    public Response modifyUser(@PathParam("idUser")int idUser, @QueryParam("id") int id, @HeaderParam("token")String token, Usuario updatedUser) {
+    public Response modifyUser(@PathParam("idUser")int idUser, @QueryParam("id") int id, @HeaderParam("token")String token, InputStream updatedUser) {
     	
     	try{
 			 this.authz = new AuthenticationImpl();			  
 			 int validado = this.authz.validaToken(token, id);
 			  
 			  switch (validado){
-			  	case 1:			  		
-			  		 boolean result = userManager.updateUser(updatedUser);
+			  	case 1:		
+			  		StringBuilder sB = new StringBuilder();
+			    	
+					try {
+						BufferedReader in = new BufferedReader(new InputStreamReader(updatedUser));
+						String line = null;
+						while ((line = in.readLine()) != null) {
+							sB.append(line);
+						}
+					} catch (Exception e) {
+						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Error parsing.").build();
+					}
+					
+					String result = sB.toString();
+
+					Gson gson = new Gson();
+			        Usuario nUser = gson.fromJson(result,Usuario.class);
+			  		
+			  		
+			  		 boolean res = userManager.updateUser(nUser);
 			         
-			         if (result){
+			         if (res){
 			             return Response.ok().build();
 			         }else{
 			             return Response.notModified().build();

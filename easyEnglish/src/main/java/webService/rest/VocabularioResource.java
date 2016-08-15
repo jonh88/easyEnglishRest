@@ -71,11 +71,11 @@ public class VocabularioResource {
 			  
 			  switch (validado){
 			  	case 1:			  		
-			  	//buscamos el vocabulario en la BD, lo instanciamos y devolvemos
+			  		//buscamos el vocabulario en la BD, lo instanciamos y devolvemos
 			        Vocabulario vocab = vocabularioManager.findVocabularyById(idVoc);
 			        
 			        if (vocab == null){
-			            return Response.status(Status.NOT_FOUND).entity("Vocabulary not found.").build();
+			            return Response.status(Status.NOT_FOUND).build();
 			        }
 			       
 			        return Response.status(Status.OK).entity(vocab).build();
@@ -110,8 +110,9 @@ public class VocabularioResource {
 			 int validado = this.authz.validaToken(token, id);
 			  
 			  switch (validado){
-			  	case 1:			  		
-			  		if (vocabularioManager.updateVocabulario(updatedVocab)== true){
+			  	case 1:		
+			  		
+			  		if ((vocabularioManager.findVocabularyById(idVoc) != null)&&(vocabularioManager.updateVocabulario(updatedVocab)== true)){
 			            return Response.status(Status.OK).build();
 			        }else{
 			        	return Response.notModified().build();

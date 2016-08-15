@@ -2,7 +2,9 @@ package webService.rest;
 
 import dao.AuthenticationImpl;
 import dao.TestDAOImpl;
+import dao.UsuarioDAOImpl;
 import domain.Test;
+import domain.Usuario;
 import domain.Vocabulario;
 
 import java.io.BufferedReader;
@@ -44,6 +46,7 @@ public class TestResource {
     private UriInfo context;
     private TestDAOImpl testManager;
     private AuthenticationImpl authz;
+    private UsuarioDAOImpl userManager;
     
     /**
      * Creates a new instance of TestResource
@@ -51,6 +54,7 @@ public class TestResource {
     public TestResource() {
         this.testManager = new TestDAOImpl();
         this.authz = new AuthenticationImpl();
+        this.userManager = new UsuarioDAOImpl();
     }
 
    
@@ -68,7 +72,7 @@ public class TestResource {
 			        Test t = testManager.getTestObject(idTest);
 			        
 			        if (t == null){
-			            return Response.status(Response.Status.NOT_FOUND).entity("Test with id: "+idTest+" not found.").build();
+			            return Response.status(Response.Status.NOT_FOUND).build();
 			        }
 			        
 			        return Response.status(Response.Status.OK).entity(t).type(MediaType.APPLICATION_JSON).build();
@@ -108,7 +112,7 @@ public class TestResource {
 			  		//buscamos el usuario en la BD, lo instanciamos y devolvemos   
 			        Set<Vocabulario> result = testManager.getVocabularioTest(idTest);
 			        
-			        if (result.isEmpty()){
+			        if ((result == null)||(result.isEmpty())){
 			        	return Response.status(Response.Status.NOT_FOUND).entity("Empty test.").build();
 			        }
 
@@ -160,7 +164,7 @@ public class TestResource {
 					String result = sB.toString();
 
 					Gson gson = new Gson();
-			        Test t = gson.fromJson(result,Test.class);
+			        Test t = gson.fromJson(result,Test.class);			        		       
 			        
 			    	boolean res = testManager.update(t);
 			    	
