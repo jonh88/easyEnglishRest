@@ -68,6 +68,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
         	}
             
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if ((session != null)&&(session.isOpen()))
@@ -91,7 +92,8 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
            
            session.getTransaction().commit();
            return true;
-        }catch (Exception ex){        	
+        }catch (Exception e){    
+        	e.printStackTrace();
             return false;
         }finally{
         	if (session.isOpen())
@@ -146,6 +148,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
             
             return null;            
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
@@ -169,6 +172,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
             }
             return null;
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
@@ -190,6 +194,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
             transaction.commit();
             return true;
         }catch (Exception e){
+        	e.printStackTrace();
             return false;
         }finally{
         	if (session.isOpen())
@@ -226,6 +231,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
             return c.getTests();
                      
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
@@ -255,6 +261,7 @@ public class UsuarioDAOImpl implements IUsuarioDAO{
             return c.getVocabularios();
                      
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())

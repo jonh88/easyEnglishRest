@@ -11,6 +11,7 @@ import org.hibernate.Transaction;
 import conn.HibernateUtil;
 import domain.Cuestionario;
 import domain.Pregunta;
+import util.FechaManager;
 
 public class CuestionarioDAOImpl implements ICuestionarioDAO{
 
@@ -31,7 +32,8 @@ public class CuestionarioDAOImpl implements ICuestionarioDAO{
 			return null;
 		}
 		//2
-		int fecha = 20160101;
+		FechaManager fm = new FechaManager();
+		int fecha = fm.getNow();		
 		UsuarioDAOImpl userManager = new UsuarioDAOImpl();
 		Cuestionario newCuestionario = new Cuestionario(userManager.findUserById(client),fecha, numPreguntas, -1);
 		//3
@@ -54,7 +56,8 @@ public class CuestionarioDAOImpl implements ICuestionarioDAO{
            session.save(newCuestionario);           
            session.getTransaction().commit();
            return newCuestionario;
-        }catch (Exception ex){        	
+        }catch (Exception e){     
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
@@ -68,11 +71,16 @@ public class CuestionarioDAOImpl implements ICuestionarioDAO{
         try  {
            session = HibernateUtil.getSessionFactory().getCurrentSession();
            session.beginTransaction();
-           session.saveOrUpdate(cModificado);
-           session.flush();
+           //session.saveOrUpdate(cModificado);
+           //session.flush();
+           Cuestionario c = (Cuestionario)session.get(Cuestionario.class, cModificado.getId());
+           c.setFecha(cModificado.getFecha());
+           c.setNumFallos(cModificado.getNumFallos());
+           c.setNumPreguntas(cModificado.getNumPreguntas());
            session.getTransaction().commit();
            return true;
-        }catch (Exception ex){        	
+        }catch (Exception e){        	
+        	e.printStackTrace();
             return false;
         }finally{
         	if (session.isOpen())
@@ -99,6 +107,7 @@ public class CuestionarioDAOImpl implements ICuestionarioDAO{
             
             return null;            
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
@@ -128,6 +137,7 @@ public class CuestionarioDAOImpl implements ICuestionarioDAO{
             return c.getPreguntas();
                      
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())

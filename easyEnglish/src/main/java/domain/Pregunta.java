@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  *
  * @author Jonh
@@ -51,6 +53,7 @@ public class Pregunta implements Serializable {
 
     public void setRespOK(String res) { this.respOK = res; }
     
+    @JsonIgnore
     public Set<Cuestionario> getCuestionarios(){ return this.cuestionarios; }
     
     public void setCuestionarios (Set<Cuestionario> cuestionarios) {this.cuestionarios= cuestionarios;}

@@ -17,18 +17,12 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  *
  * @author Jonh
  */
-//@XmlRootElement(name="test")
-//@XmlAccessorType(XmlAccessType.FIELD)
+
 public class Test implements Serializable {
-    //@XmlAttribute
     private int id;
-    //@XmlElement
     private Usuario user;
-    //@XmlElement
-    private int fecha;
-    //@XmlElement
+    private int fecha;    
     private int numPreguntas;
-    //@XmlElement
     private int numFallos;
     Set<Vocabulario> vocabularios = new HashSet<Vocabulario>();
     

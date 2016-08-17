@@ -4,6 +4,8 @@ package dao;
 import conn.HibernateUtil;
 import domain.Test;
 import domain.Vocabulario;
+import util.FechaManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -38,7 +40,8 @@ public class TestDAOImpl implements ITestDAO{
 			return null;
 		}
 		//2
-		int fecha = 20160101;		
+		FechaManager fm = new FechaManager();
+		int fecha = fm.getNow();		
 		Test newTest = new Test(userManager.findUserById(client), fecha, numPreguntas, -1);
 		//3
 		List<Vocabulario> vocsUser = new ArrayList<Vocabulario>();
@@ -61,7 +64,8 @@ public class TestDAOImpl implements ITestDAO{
            session.save(newTest);           
            session.getTransaction().commit();
            return newTest;
-        }catch (Exception ex){        	
+        }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
@@ -112,6 +116,7 @@ public class TestDAOImpl implements ITestDAO{
             
             return null;            
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
@@ -140,6 +145,7 @@ public class TestDAOImpl implements ITestDAO{
             return c.getVocabularios();
                      
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())

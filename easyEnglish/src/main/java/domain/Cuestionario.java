@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.codehaus.jackson.annotate.JsonBackReference;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonManagedReference;
 
 
@@ -34,6 +35,7 @@ public class Cuestionario implements Serializable {
 
     public void setId(int idCuestionario) { this.id = idCuestionario; }
 
+    @JsonIgnore
     public Usuario getUser() { return user; }
 
     public void setUser(Usuario user) { this.user = user; }
@@ -50,6 +52,7 @@ public class Cuestionario implements Serializable {
 
     public void setNumFallos(int numFallos) { this.numFallos = numFallos; }
     
+    @JsonIgnore
     public Set<Pregunta> getPreguntas(){ return this.preguntas; }
     
     public void setPreguntas(Set<Pregunta> preguntas){ this.preguntas = preguntas;}

@@ -5,6 +5,7 @@ import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Date;
 import javax.crypto.Cipher;
@@ -22,6 +23,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 
 import conn.ConnectionDB;
+import domain.Usuario;
 
 public class AuthenticationImpl implements IAuthentication{
 
@@ -126,14 +128,15 @@ public class AuthenticationImpl implements IAuthentication{
 		
 		try {
 			//fecha
-			java.sql.Date fecha = new java.sql.Date(new java.util.Date().getTime());
-            /*String fechaActual = String.valueOf(fecha.getYear()+1900)+
-                    String.valueOf(fecha.getMonth()+1)+
-                    String.valueOf(fecha.getDate());
-            */
+			java.sql.Date fecha = new java.sql.Date(new java.util.Date().getTime());            
 			//id del usuario a partir del mail
-			int id_user = this.user.findUserByEmail(email).getId();
-						        
+			Usuario user = this.user.findUserByEmail(email);
+			int id_user = 0;
+			if (user != null){
+				id_user = user.getId();
+			}else{
+				throw new NullPointerException();
+			}									        
             
 			if (this.tokenExist(id_user)){
 				//si existe hago un update
@@ -153,9 +156,7 @@ public class AuthenticationImpl implements IAuthentication{
 				if (rs>0)
 					return true;
 				
-				return false;
-				
-				
+				return false;								
 			}else{
 				//si no existe inserto				
 				String sql = "insert into tbl_authz (id_user, access_token, fecha) values (?,?,?)";
@@ -163,8 +164,7 @@ public class AuthenticationImpl implements IAuthentication{
 				PreparedStatement ps = cn.prepareStatement(sql);
 				ps.setInt(1, id_user);
 				ps.setString(2, token);
-				ps.setDate(3, fecha);
-	            //ps.setInt(3, Integer.parseInt(fechaActual));
+				ps.setDate(3, fecha);	            
 				
 				int rs = ps.executeUpdate();
 				
@@ -175,12 +175,13 @@ public class AuthenticationImpl implements IAuthentication{
 					return true;
 				
 				return false;
-			}
+			}						
 			
-			
-			
-		}catch (Exception e){
-			System.out.println("EXCEPTION: "+ e.getMessage().toString());
+		}catch (NullPointerException e){
+			System.out.println("NullPointerException: "+ e.getMessage().toString());
+			return false;
+		}catch (SQLException e){
+			System.out.println("SQLException: "+ e.getMessage().toString());
 			return false;
 		}
 	}
@@ -188,21 +189,24 @@ public class AuthenticationImpl implements IAuthentication{
 	private boolean tokenExist(int id_user){
 		
 		String sql = "select * from tbl_authz where id_user = ?";
+		Connection cn = null;
+		ResultSet rs = null;
 		try{
-			Connection cn = this.cn.getConn();
+			cn = this.cn.getConn();
 			PreparedStatement ps = cn.prepareStatement(sql);
 			ps.setInt(1, id_user);
 			
-			ResultSet rs = ps.executeQuery();
-			
+			rs = ps.executeQuery();
+						
+			boolean f = false;
 			if (rs.next())
-				return true;
-			else
-				return false;
-
-			
+				f = true;
+			cn.close();
+			rs.close();
+			return f;			
+						
 		}catch (Exception e){
-			
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -266,6 +270,7 @@ public class AuthenticationImpl implements IAuthentication{
 			return false;
 			
 		}catch (Exception e){
+			e.printStackTrace();
 			return false;
 		}
 	}

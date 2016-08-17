@@ -77,7 +77,8 @@ public class TipoDAOImpl implements ITipoDAO{
            session.flush();
            session.getTransaction().commit();
            return true;
-        }catch (Exception ex){        	
+        }catch (Exception e){
+        	e.printStackTrace();
             return false;
         }finally{
         	if (session.isOpen())
@@ -104,6 +105,7 @@ public class TipoDAOImpl implements ITipoDAO{
             
             return null;            
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
@@ -130,8 +132,7 @@ public class TipoDAOImpl implements ITipoDAO{
         		session.close();
         }
     }
-    
-    
+        
     public Set<Vocabulario> getVocabulariosTipo (int idTipo){
     	Session session = null;        
         try{
@@ -153,6 +154,7 @@ public class TipoDAOImpl implements ITipoDAO{
             return c.getVocabularios();
                      
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
@@ -160,17 +162,5 @@ public class TipoDAOImpl implements ITipoDAO{
         }
     }
     
-    /*
-    private boolean typeExists (String type){
-        String existe = "select * from tbl_typevoc where type ='"+type+"';";
-        boolean result = false;
-        try{
-           return false;
-            
-        }catch (Exception e){
-            return false;
-        }
-    }
-	*/
     
 }

@@ -14,6 +14,7 @@ import domain.Cuestionario;
 import domain.Test;
 import domain.Tipo;
 import dao.AuthenticationImpl;
+import dao.CuestionarioDAOImpl;
 import dao.TestDAOImpl;
 
 import java.io.BufferedReader;
@@ -55,14 +56,14 @@ import com.google.gson.Gson;
 public class UsersResource {
 
     @Context
-    private UriInfo context;
-    private VocabularioDAOImpl vocabularioManager;
+    private UriInfo context;    
     private TestDAOImpl testManager;
+    private CuestionarioDAOImpl cuestionarioManager;
     private UsuarioDAOImpl userManager;
     private AuthenticationImpl authz;
         
     public UsersResource() {
-    	this.vocabularioManager = new VocabularioDAOImpl();
+    	this.cuestionarioManager = new CuestionarioDAOImpl();
     	this.testManager = new TestDAOImpl();
         this.userManager = new UsuarioDAOImpl();
         this.authz = new AuthenticationImpl();
@@ -186,7 +187,46 @@ public class UsersResource {
 		  }  
     	               
     }
-        
+    
+    @GET
+    @Path("{idUser}/cuestionarios")
+    @Produces("application/json")
+    public Response getCuestionariosUser(@PathParam("idUser")int idUser, @QueryParam("id") int id, @HeaderParam("token") String token) {
+    	
+    	try{
+			 this.authz = new AuthenticationImpl();			  
+			 int validado = this.authz.validaToken(token, id);
+			  
+			  switch (validado){
+			  	case 1:			  		
+			  	//obtenemos lista de los test realizados por el user  
+			        Set<Cuestionario> result = userManager.getCuestionarios(idUser);
+			        if ((result == null)||(result.isEmpty())){		
+			        	return Response.status(204).build();
+			          //return Response.status(Status.NO_CONTENT).entity("User has no tests.").build();
+			        }            			        
+			        return Response.ok(result).build(); 
+			  	case -1:
+			  		return Response.status(Status.UNAUTHORIZED).entity("Token missmatch with database's token.").build();
+			  	case -2:
+			  		return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Problems verifing token.").build();
+			  	case -3:
+			  		return Response.status(Status.UNAUTHORIZED).entity("Invalid token for user with id: "+idUser).build();
+			  	case -4:
+			  		return Response.status(Status.NOT_ACCEPTABLE).entity("Token expired.").build();
+			  	case -5:
+			  		return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Error parsing token").build();
+			  	case -6:
+			  		return Response.status(Status.INTERNAL_SERVER_ERROR).entity("JOSE exception").build();
+				default:
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unknown error.").build();
+			  }
+
+		  }catch (Exception e){
+			  return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unknown error.\n"+e.getMessage()).build();
+		  }         	    	      
+    }    
+    
     @POST
     @Path("{idUser}/vocabulario")
     @Consumes("application/json")
@@ -294,6 +334,45 @@ public class UsersResource {
 			            return Response.status(Response.Status.OK).entity(test).build();
 			        }else{
 			        	return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Error creating test.").build();
+			        }			        
+			  	case -1:
+			  		return Response.status(Status.UNAUTHORIZED).entity("Token missmatch with database's token.").build();
+			  	case -2:
+			  		return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Problems verifing token.").build();
+			  	case -3:
+			  		return Response.status(Status.UNAUTHORIZED).entity("Invalid token for user with id: "+idUser).build();
+			  	case -4:
+			  		return Response.status(Status.NOT_ACCEPTABLE).entity("Token expired.").build();
+			  	case -5:
+			  		return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Error parsing token").build();
+			  	case -6:
+			  		return Response.status(Status.INTERNAL_SERVER_ERROR).entity("JOSE exception").build();
+				default:
+					return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unknown error.").build();
+			  }
+
+		  }catch (Exception e){
+			  return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unknown error.\n"+e.getMessage()).build();
+		  }
+    	
+    }
+    
+    @POST  
+    @Path("{idUser}/cuestionario")
+    @Produces ("application/json")
+    public Response insertCuestionarioUser(@PathParam("idUser")int idUser, @QueryParam("id") int id, @HeaderParam("token")String token, @QueryParam ("num") int numPreguntas ){
+        
+    	try{
+			 this.authz = new AuthenticationImpl();			  
+			 int validado = this.authz.validaToken(token, id);
+			  
+			  switch (validado){
+			  	case 1:			  		
+			  		Cuestionario c = cuestionarioManager.insertCuestionario(idUser, numPreguntas); 
+			        if (c != null){
+			            return Response.status(Response.Status.OK).entity(c).build();
+			        }else{
+			        	return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Error creating exam.").build();
 			        }			        
 			  	case -1:
 			  		return Response.status(Status.UNAUTHORIZED).entity("Token missmatch with database's token.").build();

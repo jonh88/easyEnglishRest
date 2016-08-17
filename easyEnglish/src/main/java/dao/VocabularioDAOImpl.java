@@ -65,7 +65,8 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
            session.flush();
            session.getTransaction().commit();
            return true;
-        }catch (Exception ex){        	
+        }catch (Exception e){
+        	e.printStackTrace();
             return false;
         }finally{
         	if (session.isOpen())
@@ -92,6 +93,7 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
             
             return null;            
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
@@ -137,13 +139,13 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
             
             return null;            
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
         		session.close();
         }
-	}
-   
+	}  
     
     public boolean vocabularyExists (String mEnglish){
     	        
@@ -174,6 +176,7 @@ public class VocabularioDAOImpl implements IVocabularioDAO{
             
             return null;            
         }catch (Exception e){
+        	e.printStackTrace();
             return null;
         }finally{
         	if (session.isOpen())
