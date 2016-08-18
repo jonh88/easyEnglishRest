@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="domain.Test" table="tbl_test">
+		<id name="id" type="int">
+			<column name="Id_test"/>
+			<generator class="increment" />
+		</id>
+		
+		<many-to-one name="user" class="domain.Usuario" column="tbl_Users_Id_usr" not-null="true"/>
+		
+		<property name="fecha" type="int">
+			<column name="fecha"/>
+		</property>
+		<property name="numPreguntas" type="int">
+			<column name="num_preguntas"/>
+		</property>
+		<property name="numFallos" type="int">
+			<column name="num_fallos"/>
+		</property>
+				
+		<set name="vocabularios" table="tbl_test_vocab" cascade="all" inverse="false">
+			<key>
+				<column name="tbl_Test_Id_test"/>
+			</key>
+			<many-to-many column="tbl_Vocabulary_id_Vocabulary" class="domain.Vocabulario" />
+		</set>
+		
+	</class>
+</hibernate-mapping>
