@@ -56,7 +56,22 @@
 	    <artifactId>commons-codec</artifactId>
 	    <version>1.10</version>
 	</dependency>
-		
+
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-api</artifactId>
+		<version>1.7.5</version>
+	</dependency>
+	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-lang3</artifactId>
+		<version>3.0</version>
+	</dependency>
+	<dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-c3p0</artifactId>
+		<version>4.3.5.Final</version>
+	</dependency>
   </dependencies>
   <build>
     <finalName>easyEnglish</finalName>

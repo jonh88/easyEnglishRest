@@ -42,6 +42,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.hibernate.Hibernate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.Response.Status;
 
@@ -61,6 +63,7 @@ public class UsersResource {
     private CuestionarioDAOImpl cuestionarioManager;
     private UsuarioDAOImpl userManager;
     private AuthenticationImpl authz;
+    private static Logger logger = LoggerFactory.getLogger(UsersResource.class);
         
     public UsersResource() {
     	this.cuestionarioManager = new CuestionarioDAOImpl();
@@ -73,7 +76,7 @@ public class UsersResource {
     @Path("{idUser}")
     @Produces("application/json")
     public Response getUser(@QueryParam("id") int id, @HeaderParam("token")String token, @PathParam("idUser")int idUser) {
-        
+        logger.info("Getting user with id: {}", idUser);
     	try{
 			 this.authz = new AuthenticationImpl();			  
 			 int validado = this.authz.validaToken(token, id);
@@ -84,9 +87,11 @@ public class UsersResource {
 			        Usuario user = userManager.findUserById(idUser);			       
 			        
 			        if (user == null){
+			        	logger.warn("User does not exist");
 			           return Response.status(Status.NO_CONTENT).build();
 			        	//return Response.status(Status.NO_CONTENT).entity("User not found in database.").build();
 			        }			       
+			        logger.debug("Retrieving user");
 			        return Response.status(Status.OK).entity(user).build();
 			  	case -1:
 			  		return Response.status(Status.UNAUTHORIZED).entity("Token missmatch with database's token.").build();
@@ -105,6 +110,7 @@ public class UsersResource {
 			  }
 
 		  }catch (Exception e){
+			  logger.error("Error getting user", e);
 			  return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unknown error.\n"+e.getMessage()).build();
 		  }     	    	        
     }
@@ -113,7 +119,7 @@ public class UsersResource {
     @Path("{idUser}/tests")
     @Produces("application/json")
     public Response getTestUser(@PathParam("idUser")int idUser, @QueryParam("id") int id, @HeaderParam("token") String token) {
-    	
+    	logger.info("Getting tests for user with id: {}", idUser);
     	try{
 			 this.authz = new AuthenticationImpl();			  
 			 int validado = this.authz.validaToken(token, id);
@@ -122,10 +128,12 @@ public class UsersResource {
 			  	case 1:			  		
 			  	//obtenemos lista de los test realizados por el user  
 			        Set<Test> result = userManager.getTestUser(idUser);
-			        if ((result == null)||(result.isEmpty())){		
+			        if ((result == null)||(result.isEmpty())){	
+			        	logger.warn("User has no tests yet");
 			        	return Response.status(204).build();
 			          //return Response.status(Status.NO_CONTENT).entity("User has no tests.").build();
 			        }            			        
+			        logger.debug("Retrieving tests for user with id: {}", idUser);
 			        return Response.ok(result).build(); 
 			  	case -1:
 			  		return Response.status(Status.UNAUTHORIZED).entity("Token missmatch with database's token.").build();
@@ -144,6 +152,7 @@ public class UsersResource {
 			  }
 
 		  }catch (Exception e){
+			  logger.error("Error getting tests for user with id: {}", idUser, e);
 			  return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unknown error.\n"+e.getMessage()).build();
 		  }         	    	      
     }
@@ -152,6 +161,7 @@ public class UsersResource {
     @Path("{idUser}/vocabularies")
     @Produces("application/json")
     public Response getVocabulariesUser(@PathParam("idUser")int idUser, @QueryParam("id") int id, @HeaderParam("token")String token) {
+    	logger.info("getting vocabularies for user with id: {}", idUser);
     	try{
 			 this.authz = new AuthenticationImpl();			  
 			 int validado = this.authz.validaToken(token, id);
@@ -161,9 +171,11 @@ public class UsersResource {
 			  		Set<Vocabulario> result = userManager.getVocabularios(idUser);
 			        
 			        if ((result == null)||(result.isEmpty())){
+			        	logger.warn("User has no vocabularies yet");
 			        	return Response.status(204).build();
 			         }
 			         
+			        logger.debug("Retrieving vocabularies for user with id: {}", idUser);
 			         return Response.status(Status.OK).entity(result).build();
 			        			       			        
 			  	case -1:
@@ -183,6 +195,7 @@ public class UsersResource {
 			  }
 
 		  }catch (Exception e){
+			  logger.error("Error getting vocabularies for user with id: {}", idUser, e);
 			  return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unknown error.\n"+e.getMessage()).build();
 		  }  
     	               
@@ -192,7 +205,7 @@ public class UsersResource {
     @Path("{idUser}/cuestionarios")
     @Produces("application/json")
     public Response getCuestionariosUser(@PathParam("idUser")int idUser, @QueryParam("id") int id, @HeaderParam("token") String token) {
-    	
+    	logger.info("getting cuestionaries for user with id: {}", idUser);
     	try{
 			 this.authz = new AuthenticationImpl();			  
 			 int validado = this.authz.validaToken(token, id);
@@ -201,10 +214,12 @@ public class UsersResource {
 			  	case 1:			  		
 			  	//obtenemos lista de los test realizados por el user  
 			        Set<Cuestionario> result = userManager.getCuestionarios(idUser);
-			        if ((result == null)||(result.isEmpty())){		
+			        if ((result == null)||(result.isEmpty())){	
+			        	logger.warn("User has no cuestionaries yet");
 			        	return Response.status(204).build();
 			          //return Response.status(Status.NO_CONTENT).entity("User has no tests.").build();
-			        }            			        
+			        }   
+			        logger.debug("Retrieving cuestionaries for user with id: {}", idUser);
 			        return Response.ok(result).build(); 
 			  	case -1:
 			  		return Response.status(Status.UNAUTHORIZED).entity("Token missmatch with database's token.").build();
@@ -223,6 +238,7 @@ public class UsersResource {
 			  }
 
 		  }catch (Exception e){
+			  logger.error("Error getting cuestionaries for user with id: {}", idUser, e);
 			  return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unknown error.\n"+e.getMessage()).build();
 		  }         	    	      
     }    
@@ -231,7 +247,7 @@ public class UsersResource {
     @Path("{idUser}/vocabulario")
     @Consumes("application/json")
     public Response insertVocabularyUser(@PathParam("idUser")int idUser, @QueryParam("id") int id, @HeaderParam("token")String token, InputStream newVoc){
-       
+    	logger.info("Inserting vocabulary for user with id: {}", idUser);
     	try{
 			 this.authz = new AuthenticationImpl();			  
 			 int validado = this.authz.validaToken(token, id);
@@ -247,6 +263,7 @@ public class UsersResource {
 							sB.append(line);
 						}
 					} catch (Exception e) {
+						logger.error("Error parsing vocabulary", e);
 						return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Error parsing").build();
 					}
 					String result = sB.toString();
@@ -257,8 +274,10 @@ public class UsersResource {
 			    	boolean res = userManager.insertVocabulario(idUser, voc);
 			    	
 			        if (res){
+			        	logger.debug("Vocabulary inserted");
 			            return Response.ok().build();
 			        }else{
+			        	logger.warn("Vocabulary not inserted");
 			            return Response.status(Status.NOT_MODIFIED).build();
 			        } 
 			  	case -1:
@@ -278,6 +297,7 @@ public class UsersResource {
 			  }
 
 		  }catch (Exception e){
+			  logger.error("Error inserting vocabulary for user with id: {}", idUser, e);
 			  return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unknown error.\n"+e.getMessage()).build();
 		  }      	   	    	
     	

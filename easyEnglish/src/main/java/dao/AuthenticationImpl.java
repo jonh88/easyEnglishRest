@@ -12,6 +12,9 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -32,6 +35,7 @@ public class AuthenticationImpl implements IAuthentication{
     private static final byte [] secret = "[B@70306774P@sSWord32EaSyenglisH".getBytes();
     private static final String keyPass = "_easyEnglish2016"; //128 bits key
     private static final String initVector = "RandomInitVector"; //16 bytes IV
+    private static Logger logger = LoggerFactory.getLogger(AuthenticationImpl.class);
     
     public AuthenticationImpl(){    	
         this.cn = new ConnectionDB();
@@ -39,19 +43,26 @@ public class AuthenticationImpl implements IAuthentication{
     }
 	
 	public String getToken(String email, String pwd){
+		logger.info("Getting token for user with email: {}", email);
 		//compruebo credenciales en bbdd
 		int idUser = checkUser(email,pwd);
-		if (idUser == 0)
+		if (idUser == 0){
+			logger.warn("Wrong password for user with email: {}", email);
 			return null;
+		}
+			
 		
 		//genero token
 		String token = generateToken (idUser);
 		
 		//almaceno token en bbdd
-		if(setToken(token, email))
+		if(setToken(token, email)){
+			logger.debug("Token has been saved in database");
 			return token;
-		else
+		}else{
+			logger.warn("Token has not saved in database");
 			return null;
+		}
 	}
 	
 	public int validaToken(String token, int idUser){
@@ -90,6 +101,7 @@ public class AuthenticationImpl implements IAuthentication{
 	}
 	
 	private String generateToken (int idUser){
+		logger.info("Generating token for user with id: {}", idUser);
 		/*Generate random 256-bit (32-byte) shared secret
     	SecureRandom random = new SecureRandom();
     	byte[] sharedSecret = new byte[32];
@@ -113,6 +125,7 @@ public class AuthenticationImpl implements IAuthentication{
     	try {
 			signedJWT.sign(signer);
 		} catch (JOSEException e) {
+			logger.error("Error generating token", e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -121,24 +134,24 @@ public class AuthenticationImpl implements IAuthentication{
     	// eyJhbGciOiJIUzI1NiJ9.SGVsbG8sIHdvcmxkIQ.onO9Ihudz3WkiauDO2Uhyuz0Y18UASXlSc1eS0NkWyA
     	String token = signedJWT.serialize();
     	
+    	logger.debug("Retrieving token");
     	return token;
 	}
 	
 	private boolean setToken(String token, String email) {
+		logger.info("Saving token for user with email: {}", email);
 		
 		try {
 			//fecha
 			java.sql.Date fecha = new java.sql.Date(new java.util.Date().getTime());            
 			//id del usuario a partir del mail
+			logger.debug("getting user");
 			Usuario user = this.user.findUserByEmail(email);
 			int id_user = 0;
-			if (user != null){
-				id_user = user.getId();
-			}else{
-				throw new NullPointerException();
-			}									        
+			id_user = user.getId();									        
             
 			if (this.tokenExist(id_user)){
+				logger.debug("User had a previous token");
 				//si existe hago un update
 				String sqlU = "update tbl_authz set access_token = ?, fecha= ? where id_user = ?";
 				Connection cn = this.cn.getConn();
@@ -153,11 +166,14 @@ public class AuthenticationImpl implements IAuthentication{
 				cn.close();
 				ps.close();
 				
-				if (rs>0)
+				if (rs>0){
+					logger.debug("Token updated for user with email: {}", email);
 					return true;
-				
+				}					
+				logger.warn("Token has not been updated for user with email: {}", email);
 				return false;								
 			}else{
+				logger.debug("User does't have previous token");
 				//si no existe inserto				
 				String sql = "insert into tbl_authz (id_user, access_token, fecha) values (?,?,?)";
 				Connection cn = this.cn.getConn();
@@ -171,22 +187,22 @@ public class AuthenticationImpl implements IAuthentication{
 				cn.close();
 				ps.close();
 				
-				if (rs>0)
+				if (rs>0){
+					logger.debug("Token updated for user with email: {}", email);
 					return true;
-				
+				}
+				logger.warn("Token has not been updated for user with email: {}", email);
 				return false;
 			}						
 			
-		}catch (NullPointerException e){
-			System.out.println("NullPointerException: "+ e.getMessage().toString());
-			return false;
-		}catch (SQLException e){
-			System.out.println("SQLException: "+ e.getMessage().toString());
+		}catch (Exception e){
+			logger.error("Error saving token for user with email: {}", email, e);			
 			return false;
 		}
 	}
 	
 	private boolean tokenExist(int id_user){
+		logger.info("Checking if user with id: {} already has a token", id_user);
 		
 		String sql = "select * from tbl_authz where id_user = ?";
 		Connection cn = null;
@@ -203,15 +219,18 @@ public class AuthenticationImpl implements IAuthentication{
 				f = true;
 			cn.close();
 			rs.close();
+			logger.debug("Token exist for user with id: {}, {}", id_user, f);
 			return f;			
 						
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error("Error checking previous token for user with id: {}", id_user, e);
+			//e.printStackTrace();
 			return false;
 		}
 	}
 
 	public int checkUser(String email, String psw) {
+		logger.info("Checking credentials for user with email: {}", email);
 		
 		String sql = "select * from tbl_users where email= ?";
 		String passEncripted = "";
@@ -239,7 +258,8 @@ public class AuthenticationImpl implements IAuthentication{
 				return 0;
 			
 		}catch (Exception e){
-			e.printStackTrace();
+			logger.error("Error checking user credentials for user with email: {}", email, e);
+			//e.printStackTrace();
 			return 0;
 		}
 				

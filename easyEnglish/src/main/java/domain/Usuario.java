@@ -3,6 +3,8 @@ package domain;
 import java.io.Serializable;
 import java.util.Set;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 /**
  *
@@ -65,4 +67,26 @@ public class Usuario implements Serializable {
     public Set<Test> getTests(){ return this.tests; }
     
     public void setTests (Set<Test> tests) {this.tests= tests;}
+    
+    @Override
+    public int hashCode(){
+    	return new HashCodeBuilder().append(id).build();
+    }
+    
+    @Override
+    public boolean equals(Object o){
+    	if (o instanceof Usuario) {
+            Usuario other = (Usuario) o;
+            if (this.id == other.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public String toString(){
+    	return ReflectionToStringBuilder.toStringExclude(this, "pwd", "vocabularios", 
+    			"cuestionarios", "tests");
+    }
 }

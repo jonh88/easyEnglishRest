@@ -9,7 +9,6 @@ import org.junit.runners.MethodSorters;
 
 import dao.AuthenticationImpl;
 import dao.UsuarioDAOImpl;
-import domain.Token;
 import domain.Usuario;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)

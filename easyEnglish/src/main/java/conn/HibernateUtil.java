@@ -6,14 +6,17 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //import com.journaldev.hibernate.model.Employee1;
 
 public class HibernateUtil {
 	//XML based configuration
-	private static SessionFactory sessionFactory;
+	private static SessionFactory sessionFactory;	
 	
     private static SessionFactory buildSessionFactory() {
+    	
         try {
             // Create the SessionFactory from hibernate.cfg.xml
         	Configuration configuration = new Configuration();

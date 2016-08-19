@@ -11,6 +11,8 @@ import java.util.Set;
 
 import javax.xml.bind.annotation.*;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.codehaus.jackson.annotate.JsonBackReference;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
@@ -18,15 +20,11 @@ import org.codehaus.jackson.annotate.JsonIgnore;
  *
  * @author Jonh
  */
-//@XmlRootElement(name="vocabulario")
-//@XmlAccessorType(XmlAccessType.FIELD)
+
 public class Vocabulario implements Serializable {
     
-    //@XmlAttribute
     private int id;
-    //@XmlElement
-    private String english;
-    //@XmlElement
+    private String english;    
     private String spanish;    
     private Tipo tipo;
     private Set<Usuario> usuarios;
@@ -59,4 +57,25 @@ public class Vocabulario implements Serializable {
     public Set<Test> getTests(){ return this.tests; }
     
     public void setTests (Set<Test> tests) {this.tests = tests;}
+    
+    @Override
+    public int hashCode(){
+    	return new HashCodeBuilder().append(id).build();
+    }
+    
+    @Override
+    public boolean equals(Object o){
+    	if (o instanceof Cuestionario) {
+    		Tipo other = (Tipo) o;
+            if (this.id == other.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public String toString(){
+    	return ReflectionToStringBuilder.toStringExclude(this, "usuarios", "tests");
+    }
 }

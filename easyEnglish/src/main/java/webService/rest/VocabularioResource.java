@@ -9,35 +9,22 @@ package webService.rest;
 import dao.AuthenticationImpl;
 import dao.VocabularioDAOImpl;
 import dao.UsuarioDAOImpl;
-import domain.Test;
-import domain.Token;
-import domain.Usuario;
 import domain.Vocabulario;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.util.List;
-
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
-import com.google.gson.Gson;
 
 /**
  * REST Web Service
@@ -51,12 +38,10 @@ public class VocabularioResource {
     private UriInfo context;
     private VocabularioDAOImpl vocabularioManager;
     private AuthenticationImpl authz;
-    private UsuarioDAOImpl userManager;
     
     public VocabularioResource() {
         this.vocabularioManager = new VocabularioDAOImpl();
-        this.authz = new AuthenticationImpl();
-        this.userManager = new UsuarioDAOImpl();
+        this.authz = new AuthenticationImpl();        
     }
 
     

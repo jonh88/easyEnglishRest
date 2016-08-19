@@ -13,7 +13,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import dao.AuthenticationImpl;
+import dao.UsuarioDAOImpl;
 
 @Path("media")
 public class AudioResource {
@@ -22,7 +27,7 @@ public class AudioResource {
     private UriInfo context;
 	
 	private AuthenticationImpl authz;
-
+	private static Logger logger = LoggerFactory.getLogger(AudioResource.class);
 	
 	public AudioResource(){
 		this.authz = new AuthenticationImpl();
@@ -31,6 +36,7 @@ public class AudioResource {
 	  @GET	  
 	  @Produces(MediaType.APPLICATION_OCTET_STREAM)
 	  public Response getFile(@QueryParam("id") int idUser, @HeaderParam("token")String token, @QueryParam("name")String path) {
+		  logger.info("Getting file: {}", path);
 		  try{
 			 this.authz = new AuthenticationImpl();			  
 			 int validado = this.authz.validaToken(token, idUser);
@@ -61,6 +67,7 @@ public class AudioResource {
 			  }
 
 		  }catch (Exception e){
+			  logger.error("Error getting file: {}", path, e);
 			  return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unknown error.\n"+e.getMessage()).build();
 		  }
 	    
@@ -70,6 +77,7 @@ public class AudioResource {
 	  @Path("/resources")
 	  @Produces("application/json")	  
 	  public Response getResources (@QueryParam("id") int idUser, @HeaderParam("token") String token){
+		  logger.info("Getting available resources");
 		  try{
 				 this.authz = new AuthenticationImpl();			  
 				 int validado = this.authz.validaToken(token, idUser);
@@ -86,6 +94,7 @@ public class AudioResource {
 								  nFicheros.add(ficheros[i].getName());
 							  }				 		  							  
 						  }else{
+							  logger.warn("Directory /webapps/easyEnglish/resources doesn't exist.");
 							 return Response.status(Status.NOT_FOUND).entity("Directory /webapps/easyEnglish/resources doesn't exist.").build();
 						  }
 						  return Response.ok(nFicheros).build();
@@ -106,6 +115,7 @@ public class AudioResource {
 				  }
 
 			  }catch (Exception e){
+				  logger.error("Error getting available resources.", e);
 				  return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Unknown error.\n"+e.getMessage()).build();
 			  }
 

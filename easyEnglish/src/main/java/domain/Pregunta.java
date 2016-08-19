@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
@@ -58,5 +60,24 @@ public class Pregunta implements Serializable {
     
     public void setCuestionarios (Set<Cuestionario> cuestionarios) {this.cuestionarios= cuestionarios;}
     
+    @Override
+    public int hashCode(){
+    	return new HashCodeBuilder().append(id).build();
+    }
     
+    @Override
+    public boolean equals(Object o){
+    	if (o instanceof Cuestionario) {
+    		Pregunta other = (Pregunta) o;
+            if (this.id == other.getId()) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public String toString(){
+    	return ReflectionToStringBuilder.toStringExclude(this, "cuestionarios");
+    }
 }
